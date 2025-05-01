@@ -1,0 +1,4 @@
+role,userID,username,password,name,email,contactInfo,department,commission
+Agent,1,agent007,e1818e1178da4629430015f584087e6060ab9fc8adaa0db8ec66f62e1333a887,James Bond,jbond@mi6.co.uk,+44...,Intelligence,0.15
+Customer,2,jane_doe,d3dec3f35387156495cbc21471313f87155f878f3435b693f50077c2be479033,Jane Doe,jane@ex.com,+20...,"123 Elm St","BKG123;BKG456","window seat"
+Administrator,3,root,f94f056855b0d7a0b5ae51f550dec0023ee5b62772296ed44f83f4230d4d5b3a,Root User,root@sys.local,+1...,superuser

@@ -1,4 +1,5 @@
 import java.io.*; // import necessary libraries for securing password
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,7 +29,7 @@ public abstract class User{ // This superclass is gonna be extended to Customer,
 private String hashPassword(String password) { // to make the password more secured and to avoid saving it in plain text.
     try {                                      // using try-catch to handle errors.
         MessageDigest md = MessageDigest.getInstance("SHA-256"); // MessageDigest is a class in Java that allows us to generate cryptographic hashes (e.g., SHA-256)
-        byte[] hashBytes = md.digest(password.getBytes());
+        byte[] hashBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
         StringBuilder sb = new StringBuilder();
         for (byte b : hashBytes) {   
             sb.append(String.format("%02x", b));  // Convert byte to hex string
@@ -54,13 +55,13 @@ public void saveToCsv(String filepath){
 
     try(BufferedWriter w = new BufferedWriter(new FileWriter(file,true))){
         if (writeHeader){
-            w.write(getCsvHeader);
+            w.write(getCsvHeader());
             w.newLine();
         }
-        w.write(toCsvLIne());
+        w.write(toCsvLine());
         w.newLine();
     }catch (IOException e){
-        throw new RuntimeException("Faild to save user data", e)
+        throw new RuntimeException("Faild to save user data", e);
     }
 }
 
@@ -107,7 +108,7 @@ protected abstract String getExtraFields();
         return username;
     }
 
-    public String getname(){
+    public String getName(){
         return name;
     }
 
@@ -142,7 +143,7 @@ class Agent extends User{
 
     @Override
     protected String getExtraFieldNames(){
-        return "department,commision";
+        return "department,commission";
     }
 
     @Override
