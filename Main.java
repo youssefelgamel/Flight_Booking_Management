@@ -1,6 +1,7 @@
+import java.util.Scanner; 
 public class Main {
     public static void main(String[] args) {
-
+        Scanner input=new Scanner(System.in);
         Agent a1 = new Agent(1, "agent007", "TopSecret1", "James Bond",
                         "jbond@mi6.co.uk", "+44...", "Intelligence", 0.15);
 
@@ -19,7 +20,7 @@ public class Main {
         c1.saveToCsv(path);
         adm1.saveToCsv(path);
 
-
+    ///555555555555555555555555555555555555555555555
 
         /*                           Booooooombaaaaaaaaaaaaaaaaaa                            */
 
