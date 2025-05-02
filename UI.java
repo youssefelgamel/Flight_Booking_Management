@@ -1,10 +1,15 @@
-import javax,swing.JFrame; 
-public class UI{
-    JFrame frame = new JFrame();
-    frame.setVisible(true); 
-    frame.setSize(420,420); 
-    frame.setResizable(false);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setTitle("Flight Booking Management System");   
+import javax.swing.*;
 
+public class UI {
+
+    public UI() {
+        JFrame frame = new JFrame();
+        setFrame(frame);
+        frame.setVisible(true);
+    }
+    private void setFrame(JFrame frame) {
+        frame.setSize(420, 420);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("Flight Booking Management System");
+    }
 }
