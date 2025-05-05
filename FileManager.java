@@ -1,8 +1,8 @@
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 public class FileManager {
     private static final String USERS_FILE      = "users.txt";
@@ -88,7 +88,7 @@ public class FileManager {
                             f.getOrigin(),
                             f.getDestination(),
                             f.getDepartureTime().toString(),
-                            
+                            f.getArrivalTime().toString(),
                             prices));
                 bw.newLine();
             }
@@ -164,7 +164,7 @@ public class FileManager {
                     p[0].trim(),
                     p[1].trim(),
                     p[2].trim(),
-                    LocalDateTime.parse(p[3].trim())
+                    LocalDate.parse(p[3].trim())
                 ));
             }
         }

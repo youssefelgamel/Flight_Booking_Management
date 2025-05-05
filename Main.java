@@ -1,4 +1,5 @@
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -103,7 +104,7 @@ public class Main {
                     System.out.println("Available flights:");
                     for (int i = 0; i < flights.size(); i++){
                         Flight f = flights.get(i);
-                        System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
+                        System.out.printf("%d) %s | %s to %s | Depart: %s\n",
                             i+1,
                             f.getFlightNumber(),
                             f.getAirline(),
@@ -124,7 +125,7 @@ public class Main {
                         System.out.printf("Passenger %d passport number: ", i);
                         String passport = input.nextLine().trim();
                         System.out.printf("Passenger %d date of birth (YYYY-MM-DD): ", i);
-                        LocalDateTime dob = LocalDateTime.parse(input.nextLine().trim());
+                        LocalDate dob = LocalDate.parse(input.nextLine().trim());
                         passengers.add(new Passenger(passengerID, name, passport, dob));
                     }
                     Customer customer = (Customer) system.getCurrentUser();
@@ -183,7 +184,7 @@ public class Main {
                         System.out.print("Price: ");
                         Map<String, Double> priceMap = new HashMap<>();
                         while (true) { 
-                            System.out.print("Enter fare class (or blank to finish):");
+                            System.out.print("Enter fare class \"Economy\" \"First Class\" (or blank to finish):");
                             String fareClass = input.nextLine().trim();
                             if (fareClass.isEmpty()) {
                                 break; // Exit the loop if the user enters a blank fare class
@@ -287,7 +288,7 @@ public class Main {
                                 System.out.printf("Passenger %d passport number: ", i);
                                 String passport = input.nextLine().trim();
                                 System.out.printf("Passenger %d date of birth (YYYY-MM-DD): ", i);
-                                LocalDateTime dob = LocalDateTime.parse(input.nextLine().trim());
+                                LocalDate dob = LocalDate.parse(input.nextLine().trim());
                                 passengers2.add(new Passenger(passengerID, name, passport, dob)); // Add the passenger to the list
                             }
                             Customer customer2 = (Customer) system.getCurrentUser(); // Get the current user

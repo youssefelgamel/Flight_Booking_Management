@@ -1,14 +1,14 @@
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 public class Passenger {
     private String passengerID;
     private String name;
     private String passportNumber;
-    private LocalDateTime dateOfBirth; // optional field
+    private LocalDate dateOfBirth; // optional field
 
-    public Passenger(String passengerID, String name, String passportNumber, LocalDateTime dateOfBirth) {
+    public Passenger(String passengerID, String name, String passportNumber, LocalDate dateOfBirth) {
         this.passengerID = passengerID;
         this.name = name;
         this.passportNumber = passportNumber;
@@ -27,7 +27,7 @@ public class Passenger {
         return passportNumber;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
