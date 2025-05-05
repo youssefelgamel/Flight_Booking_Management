@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+=======
+//import java.util.Scanner; 
+>>>>>>> 2c3d2bd81aa89e9d342103537ce23ae9a4d08794
 public class Main {
+
     public static void main(String[] args) {
+<<<<<<< HEAD
         Scanner input = new Scanner(System.in);
         BookingSystem system;
 
@@ -59,6 +65,23 @@ public class Main {
                             System.err.println("Invalid role selection. Defaulting to Customer.");
                             role = "Customer";
                     }
+=======
+        // Scanner input=new Scanner(System.in);
+        UI ui = new UI();
+        Agent a1 = new Agent(1, "agent007", "TopSecret1", "James Bond",
+                "jbond@mi6.co.uk", "+44...", "Intelligence", 0.15);
+
+        Customer c1 = new Customer(2, "jane_doe", "Pass1234", "Jane Doe",
+                "jane@ex.com", "+20...", "123 Elm St",
+                "BKG123;BKG456", "window seat");
+
+        Administrator adm1 = new Administrator(3, "root", "Adm1n123", "Root User",
+                "root@sys.local", "+1...", "superuser");
+
+        // Customer c2 = new Customer(2,"Dezllar","0123","Youssef
+        // Elgamel","youssefelgamel12@gmail.com","01271446218",
+        // "Alexandria","BKG12","2 seats"); // Error in password
+>>>>>>> 2c3d2bd81aa89e9d342103537ce23ae9a4d08794
 
                     system.register(newUser, newPassword, newEmail,role);
                     System.out.println("Registeration successful! you can now login \n");
@@ -81,6 +104,7 @@ public class Main {
             System.out.println("Main Menu:");
             if (currentUser instanceof Customer){ // check if the current user is a customer
 
+<<<<<<< HEAD
             System.out.println("1) Search Flights");
             System.out.println("2) View My Bookings");
             System.out.println("3) Logout and Exit");
@@ -306,5 +330,14 @@ public class Main {
                 }
                 }
         input.close(); // Close the scanner
+=======
+        /// 555555555555555555555555555555555555555555555
+
+        /* Booooooombaaaaaaaaaaaaaaaaaa */
+
+        /* Booooooombaaaaaaaaaaaaaaaaaa */
+
+        /* Booooooombaaaaaaaaaaaaaaaaaa */
+>>>>>>> 2c3d2bd81aa89e9d342103537ce23ae9a4d08794
     }
 }
