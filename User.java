@@ -1,106 +1,36 @@
-import java.io.*; // import necessary libraries for securing password
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-
-public abstract class User{ // This superclass is gonna be extended to Customer, Agent and Administrator subclasses.
-    protected int userID;
+public abstract class User implements Interfaces.Aunthenticatable{ // This superclass is gonna be extended to Customer, Agent and Administrator subclasses.
+    protected String userID;
     protected String username;
     protected String password; // Passwords must be at least 6 characters with letters and numbers
-    protected String name;
     protected String email;
-    protected String contactInfo;
 
-    public User(){}
-
-    public User(int userID, String username, String password, String name, String email, String contactInfo){
+    public User(String userID, String username, String password, String email){
         this.userID = userID;
         this.username = username;
         this.setPassword(password); // to check validation
-        this.name = name;
         this.email = email;
-        this.contactInfo = contactInfo;
     }
 
     // --------------------
     // Password handling
     // --------------------
-private String hashPassword(String password) { // to make the password more secured and to avoid saving it in plain text.
-    try {                                      // using try-catch to handle errors.
-        MessageDigest md = MessageDigest.getInstance("SHA-256"); // MessageDigest is a class in Java that allows us to generate cryptographic hashes (e.g., SHA-256)
-        byte[] hashBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        for (byte b : hashBytes) {   
-            sb.append(String.format("%02x", b));  // Convert byte to hex string
-        }
-        return sb.toString();
-    } catch (NoSuchAlgorithmException e) {
-        throw new RuntimeException("Error while hashing password.");
-    }
-}
-
 public void setPassword(String password) {
     if (password.length() >= 6 && password.matches(".*[a-zA-Z].*") && password.matches(".*\\d.*")) {
-        this.password = hashPassword(password);  // Store hashed password
+        this.password = password;  // Store hashed password
     } else {
         throw new IllegalArgumentException("Password must be at least 6 characters with letters and numbers!");
     }
 }
 
-// --- persistence as CSV ---
-public void saveToCsv(String filepath){
-    File file = new File(filepath);
-    boolean writeHeader = !file.exists() || file.length() == 0;
-
-    try(BufferedWriter w = new BufferedWriter(new FileWriter(file,true))){
-        if (writeHeader){
-            w.write(getCsvHeader());
-            w.newLine();
-        }
-        w.write(toCsvLine());
-        w.newLine();
-    }catch (IOException e){
-        throw new RuntimeException("Faild to save user data", e);
-    }
-}
-
-private String getCsvHeader(){
-    return String.join(",",
-    "role",
-        "userID",
-        "username",
-        "password",
-        "name",
-        "email",
-        "contactInfo",
-        getExtraFieldNames()
-    );
-}
-    /** One CSV line for this user */
-private String toCsvLine() {
-    return String.join(",",
-        getClass().getSimpleName(),
-        String.valueOf(userID),
-        username,
-        password,
-        name,
-        email,
-        contactInfo,
-        getExtraFields()
-        );
-}
-/** Subclasses must supply the comma-separated field names here */
-protected abstract String getExtraFieldNames();
-
-/** Subclasses must supply the comma-separated values here */
-protected abstract String getExtraFields();
-
-    public String getPassword(){
-        return password;
+    public String getPassword() {
+        return password; 
     }
 
-    public int getUserID(){
+    public String getUserID(){
         return userID;
     }
 
@@ -108,127 +38,76 @@ protected abstract String getExtraFields();
         return username;
     }
 
-    public String getName(){
-        return name;
-    }
-
     public String getEmail(){
         return email;
     }
 
-    public String getContactInfo(){
-        return contactInfo;
+    public void updateProfile(String userID, String username, String password, String email){
+        this.userID = userID;
+        this.username = username;
+        this.setPassword(password); // to check validation
+        this.email = email;
     }
 
-    public void login(){}
 
-    public void logout(){}
+    @Override
+    public abstract boolean login(String username, String password);
 
-    public void updateProfile(){}
+
+    @Override
+    public abstract void logout();
+
 }
 
-
+//--------------------- Agent ---------------------
 class Agent extends User{ 
     private String department;
-    private double commission; // عمولة
 
-    public Agent(){}
-
-    public Agent(int userID, String username, String password, String name, String email,
-                String contactInfo, String department, double commission){
-    super(userID,username,password,name,email,contactInfo);
+    public Agent(String userID, String username, String password, String email, String department){ 
+    super(userID,username,password,email);
     this.department = department;
-    this.commission = commission;
     }
 
     @Override
-    protected String getExtraFieldNames(){
-        return "department,commission";
+    public boolean login(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
     }
 
     @Override
-    protected String getExtraFields(){
-        return department + "," + commission;
+    public void logout() {
+        // Logic for user logout
     }
 
-    public void manageFlights(){}
-
-    public void createBookingForCustomer(){}
-
-    public void modifyBooking(){}
-
-    public void generateReports(){}
-
+    public String getDepartment() {
+        return department;
+    }
 }
 
 
+
+//--------------------- Administrator ---------------------
 class Administrator extends User{
-    private String securityLevel;
 
-    public Administrator(){}
-
-    public Administrator(int userID, String username, String password, String name, String email,
-                        String contactInfo, String securityLevel){
-        super(userID,username,password,name,email,contactInfo);
-        this.securityLevel = securityLevel;
+    public Administrator(String userID, String username, String password, String email){
+        super(userID,username,password,email);
     }
 
     @Override
-    protected String getExtraFieldNames() {
-        return "securityLevel";
+    public boolean login(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
     }
-
+    
     @Override
-    protected String getExtraFields() {
-        return securityLevel;
+    public void logout() {
+        // Logic for user logout
     }
 
-    public void createUser(){}
-
-    public void modifySystemSettings(){}
-
-    public void viewSystemLogs(){}
-
-    public void manageUserAccess(){}
-
-}
-
-
-class Customer extends User{
-    private String address;
-    private String bookingHistory;
-    private String preferences;
-
-    public Customer(){}
-
-    public Customer(int userID, String username, String password, String name, String email,
-                    String contactInfo, String address,String bookingHistory,String preferences){
-        super(userID,username,password,name,email,contactInfo);
-        this.address = address;
-        this.bookingHistory = bookingHistory;
-        this.preferences = preferences;
+    public void addFlight(Flight flight) {
+        // Logic to add flight to the system
     }
 
-    @Override
-    protected String getExtraFieldNames() {
-        return "address,bookingHistory,preferences";
+    public void removeFlight(Flight flight) {
+        // Logic to remove flight from the system
     }
 
-    @Override
-    protected String getExtraFields() {
-        // wrap fields that may contain commas in quotes
-        return String.join(",",
-            "\"" + address + "\"",
-            "\"" + bookingHistory + "\"",
-            "\"" + preferences + "\""
-        );
-    }
-
-    public void searchFlights(){}
-
-    public void createBooking(){}
-
-    public void viewBooking(){}
-
-    public void cancelBooking(){}
 }

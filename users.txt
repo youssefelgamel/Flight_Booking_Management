@@ -1,0 +1,4 @@
+57fd5055-c804-4f28-aee1-676d465164ba,Dezllar,1234lol,dez@gmail.com,Customer
+e5dc22f5-3ec4-4597-ad70-b2179b252f54,Momen,1234lol,Mo@gmail.com,Customer
+a68cbef9-2fee-411e-a895-f22badcb471d,Markov,1234lol,Markov@gmail.com,Customer
+763ba2f0-07fe-4be9-b600-230f3c5363dc,Mahdi,1234lol,Mahoda@gmail.com,Administrator

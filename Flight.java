@@ -1,39 +1,44 @@
-public abstract  class Flight { // This superclass is gonna be extended to Domestic(local) and International subclasses.
-    protected int flightNumber;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+
+// 1) Abstract Flight now takes its base-prices map in the constructor:
+public abstract class Flight implements Interfaces.PriceCalculatable {
+    protected String flightNumber;
     protected String airline;
     protected String origin;
-    protected String distination;
-    protected String depatureTime; // The time listed on ticket or boarding pass.
-    protected String arrivalTime;
-    protected int availableSeats;
+    protected String destination;
+    protected LocalDateTime departureTime; 
+    protected LocalDateTime arrivalTime;  
+    protected Map<String, Double> classBasePrices; 
 
-    public Flight(){}
 
-    public Flight(int flightNumber,String airline, String origin, String distination, String depatureTime, String arrivalTime, int availableSeats){
-        this.flightNumber = flightNumber;
-        this.airline = airline;
-        this.origin = origin;
-        this.distination = distination;
-        this.depatureTime = depatureTime;
-        this.arrivalTime = arrivalTime;
-        this.availableSeats = availableSeats;
+    public Flight(String flightNumber,
+                String airline,
+                String origin,
+                String destination,
+                LocalDateTime departureTime,
+                LocalDateTime arrivalTime,
+                Map<String, Double> classBasePrices) {
+        this.flightNumber     = flightNumber;
+        this.airline          = airline;
+        this.origin           = origin;
+        this.destination      = destination;
+        this.departureTime    = departureTime;
+        this.arrivalTime      = arrivalTime;
+        this.classBasePrices  = classBasePrices;
     }
 
-    public void checkAvailability(){}
+    public String getFlightNumber() { return flightNumber; }
+    public String getAirline()      { return airline; }
+    public String getOrigin()       { return origin; }
+    public String getDestination()  { return destination; }
+    public LocalDateTime getDepartureTime() { return departureTime; }
+    public LocalDateTime getArrivalTime()   { return arrivalTime; }
 
-    public void updateSchedule(){}
-
-    public void calculatePrice(){}
-
-    public void reserveSeat(){}
+    @Override
+    public abstract double calculatePrice();
 }
 
 
-class Domestic extends Flight {
 
-}
-
-
-class International extends Flight{
-
-}
