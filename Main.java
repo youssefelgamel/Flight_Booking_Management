@@ -3,7 +3,6 @@ public class Main {
 
     public static void main(String[] args) {
         // Scanner input=new Scanner(System.in);
-        UI ui = new UI();
         Agent a1 = new Agent(1, "agent007", "TopSecret1", "James Bond",
                 "jbond@mi6.co.uk", "+44...", "Intelligence", 0.15);
 
