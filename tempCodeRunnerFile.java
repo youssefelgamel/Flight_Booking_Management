@@ -1,5 +1,0 @@
-
-    //         "\"" + bookingHistory + "\"",
-    //         "\"" + preferences + "\""
-    //     );
-    // }

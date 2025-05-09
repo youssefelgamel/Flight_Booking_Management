@@ -20,4 +20,5 @@ public class BookingSystem {
     public void processPayment(){}
 
     public void generateTicket(){}
+    
 }

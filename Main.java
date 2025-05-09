@@ -15,12 +15,11 @@ public class Main {
 
         // Customer c2 = new Customer(2,"Dezllar","0123","Youssef
         // Elgamel","youssefelgamel12@gmail.com","01271446218",
-        // "Alexandria","BKG12","2 seats"); // Error in password
-
+        // "Alexandria","BKG12","2 seats"); // Error in password 
         String path = "users.csv";
-        a1.saveToCsv(path);
-        c1.saveToCsv(path);
-        adm1.saveToCsv(path);
+        a1.saveToCsv("users.csv");
+        c1.saveToCsv("users.csv");
+        adm1.saveToCsv("users.csv");
 
         /// 555555555555555555555555555555555555555555555
 
