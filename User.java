@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public abstract class User implements Interfaces.Aunthenticatable{ // This superclass is gonna be extended to Customer, Agent and Administrator subclasses.
     protected String userID;
@@ -20,7 +17,7 @@ public abstract class User implements Interfaces.Aunthenticatable{ // This super
     // --------------------
 public void setPassword(String password) {
     if (password.length() >= 6 && password.matches(".*[a-zA-Z].*") && password.matches(".*\\d.*")) {
-        this.password = password;  // Store hashed password
+        this.password = password;  // Store password if it meets the criteria
     } else {
         throw new IllegalArgumentException("Password must be at least 6 characters with letters and numbers!");
     }
@@ -51,13 +48,14 @@ public void setPassword(String password) {
 
 
     @Override
-    public abstract boolean login(String username, String password);
+    public abstract boolean login(String username, String password); // This method is implemented in the subclasses from the Interfaces.Aunthenticatable interface
 
 
     @Override
     public abstract void logout();
 
 }
+
 
 //--------------------- Agent ---------------------
 class Agent extends User{ 
@@ -69,7 +67,7 @@ class Agent extends User{
     }
 
     @Override
-    public boolean login(String username, String password) {
+    public boolean login(String username, String password) { // This method is implemented in the subclasses from the User class
         return this.username.equals(username) && this.password.equals(password);
     }
 

@@ -2,7 +2,6 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.time.LocalDate;
 
 public class FileManager {
     private static final String USERS_FILE      = "users.txt";
@@ -17,16 +16,38 @@ public class FileManager {
     public static void saveUsers(List<User> users) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(USERS_FILE))) {
             for (User u : users) {
-                String role = u instanceof Customer      ? "Customer"
-                            : u instanceof Agent         ? "Agent"
-                            : u instanceof Administrator ? "Administrator"
-                            : "Unknown";
-                bw.write(String.join(",",
-                            u.getUserID(),
-                            u.getUsername(),
-                            u.getPassword(),
-                            u.getEmail(),
-                            role));
+                if (u instanceof Customer){
+                    Customer c = (Customer) u;
+                    bw.write(String.join(",",
+                            c.getUserID(),
+                            c.getUsername(),
+                            c.getPassword(),
+                            c.getEmail(),
+                            c.getPassportNumber(),
+                            "CUSTOMER"));
+                }
+                else if (u instanceof Agent){
+                    Agent a = (Agent) u;
+                    bw.write(String.join(",",
+                            a.getUserID(),
+                            a.getUsername(),
+                            a.getPassword(),
+                            a.getEmail(),
+                            "AGENT"));
+                }
+                else if (u instanceof Administrator){
+                    Administrator a = (Administrator) u;
+                    bw.write(String.join(",",
+                            a.getUserID(),
+                            a.getUsername(),
+                            a.getPassword(),
+                            a.getEmail(),
+                            "ADMININSTRATOR"));
+                }
+                else {
+                    System.err.println("Unknown user type, skipping: " + u);
+                    continue;
+                }
                 bw.newLine();
             }
         }
@@ -35,34 +56,45 @@ public class FileManager {
     public static List<User> loadUsers() throws IOException {
         List<User> users = new ArrayList<>();
         File f = new File(USERS_FILE);
-        if (!f.exists()) return users;
+        if (!f.exists()) return users;  // return empty list if file does not exist
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) { // reads the file line by line
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.isBlank() || line.startsWith("//")) continue;
                 String[] p = line.split(",");
-                if (p.length != 5) {
-                    throw new IllegalArgumentException("Expected 5 fields " + line);
-                }
-                String id = p[0].trim(),
-                    un = p[1].trim(),
-                    pw = p[2].trim(),
-                    em = p[3].trim(),
-                    rl = p[4].trim().toUpperCase();
-                switch (rl) {
+
+                String role = p[p.length - 1].trim().toUpperCase();
+                switch (role) {
+
                     case "CUSTOMER":
-                        users.add(new Customer(id,un,pw,em));
+                        if (p.length != 6) { // 6 fields: ID, username, password, email, passportNumber, role
+                            throw new IllegalArgumentException("Expected 6 fields " + line);
+                        }
+                            String custId   = p[0].trim();
+                            String custUser = p[1].trim();
+                            String custPass = p[2].trim();
+                            String custEmail= p[3].trim();
+                            String passport = p[4].trim();
+                            users.add(new Customer(custId, custUser, custPass, custEmail, passport));
                         break;
+
                     case "AGENT":
-                        users.add(new Agent(id,un,pw,em,"DefaultAgency"));
-                        break;
+                        if (p.length != 5) {
+                            throw new IllegalArgumentException("Expected 5 fields " + line);
+                        }
+                            users.add(new Agent(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(),"Defualt Agency"));
+                            break;
+
+                    case "ADMININSTRATOR":
                     case "ADMIN":
-                    case "ADMINISTRATOR":
-                        users.add(new Administrator(id,un,pw,em));
-                        break;
+                        if (p.length != 5) {
+                            throw new IllegalArgumentException("Expected 5 fields " + line);
+                        }
+                            users.add(new Administrator(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim()));
+                            break;
                     default:
-                        System.err.println("Unknown role, skipping: " + rl);
+                        System.out.println("Unknown user type, skipping: " + role);
                 }
             }
         }
@@ -78,7 +110,7 @@ public class FileManager {
                 String type = f instanceof DomesticFlight      ? "DOMESTIC"
                             : f instanceof InternationalFlight ? "INTERNATIONAL"
                             : "UNKNOWN";
-                String prices = f.classBasePrices.entrySet().stream()
+                String prices = f.classBasePrices.entrySet().stream() // stream the map entries
                     .map(e -> e.getKey() + "=" + e.getValue())
                     .collect(Collectors.joining(";"));
                 bw.write(String.join(",",
@@ -140,8 +172,7 @@ public class FileManager {
                 bw.write(String.join(",",
                             p.getPassengerID(),
                             p.getName(),
-                            p.getPassportNumber(),
-                            p.getDateOfBirth().toString()));
+                            p.getPassportNumber()));
                 bw.newLine();
             }
         }
@@ -157,14 +188,13 @@ public class FileManager {
             while ((line = br.readLine()) != null) {
                 if (line.isBlank()) continue;
                 String[] p = line.split(",");
-                if (p.length != 4) {
-                    throw new IllegalArgumentException("Expected 4 fields " + line);
+                if (p.length != 3) {
+                    throw new IllegalArgumentException("Expected 3 fields " + line);
                 }
                 pax.add(new Passenger(
                     p[0].trim(),
                     p[1].trim(),
-                    p[2].trim(),
-                    LocalDate.parse(p[3].trim())
+                    p[2].trim()
                 ));
             }
         }

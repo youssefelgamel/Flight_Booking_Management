@@ -4,10 +4,17 @@ import java.util.List;
 //--------------------- Customer ---------------------
 class Customer extends User{
 
-    private List<Booking> bookings = new ArrayList<>();
 
-    public Customer(String userId, String username, String password, String email) {
+    private String passportNumber;
+    private List<Booking> bookings = new ArrayList<>(); // Marked private to enforce encapsulation (no one outside the class can directly manipulate the list).
+
+    public Customer(String userId, String username, String password, String email, String passportNumber) {
         super(userId, username, password, email);
+        this.passportNumber = passportNumber;
+    }
+
+    public String getPassportNumber() {
+        return passportNumber;
     }
 
     @Override

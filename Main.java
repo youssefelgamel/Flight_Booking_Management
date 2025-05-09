@@ -1,5 +1,4 @@
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -61,7 +60,13 @@ public class Main {
                             role = "Customer";
                     }
 
-                    system.register(newUser, newPassword, newEmail,role);
+                    String passportnumber = "";
+                    if (role.equals("Customer")) {
+                        System.out.print("Passport number: ");
+                        passportnumber = input.nextLine().trim();
+                    }
+
+                    system.register(newUser, newPassword, newEmail,role, passportnumber); // Register the user
                     System.out.println("Registeration successful! you can now login \n");
                 }else if (choice.equals("0")){
                     System.out.println("Exiting the system. Goodbye!");
@@ -109,29 +114,10 @@ public class Main {
                             f.getFlightNumber(),
                             f.getAirline(),
                             f.getOrigin(),
-                            f.getDestination());
+                            f.getDestination(),
+                            f.getDepartureTime()
+                            );
                     }
-                    System.out.print("Select flight (1-" + flights.size() + "): ");
-                    int select = Integer.parseInt(input.nextLine()) - 1;
-                    Flight selectedFlight = flights.get(select);
-                    System.out.print("Number of passengers: ");
-                    int numPax = Integer.parseInt(input.nextLine().trim());
-                    List<Passenger> passengers = new ArrayList<>();
-                    for (int i = 1; i <= numPax; i++){
-                        System.out.printf("Passenger %d ID: ", i);
-                        String passengerID = input.nextLine().trim();
-                        System.out.printf("Passenger %d name: ", i);
-                        String name = input.nextLine().trim();
-                        System.out.printf("Passenger %d passport number: ", i);
-                        String passport = input.nextLine().trim();
-                        System.out.printf("Passenger %d date of birth (YYYY-MM-DD): ", i);
-                        LocalDate dob = LocalDate.parse(input.nextLine().trim());
-                        passengers.add(new Passenger(passengerID, name, passport, dob));
-                    }
-                    Customer customer = (Customer) system.getCurrentUser();
-                    Booking booking = system.createBooking(customer, selectedFlight, passengers);
-                    System.out.println("\nBooking created! Reference: " + booking.getBookingReference());
-                    System.out.println("Total price: " + booking.calculateTotalPrice());
                     break; // Exit the loop after creating a booking
                 case "2":
                     // View Bookings
@@ -215,7 +201,7 @@ public class Main {
                     } else {
                         System.out.println("All flights:");
                         for (Flight f : allFlights){
-                            System.out.println(f.getFlightNumber() + " | " + f.getAirline() + " | " + f.getOrigin() + " to " + f.getDestination());
+                            System.out.println(f.getFlightNumber() + " | " + f.getAirline() + " | " + f.getOrigin() + " to " + f.getDestination() + " | Depart: " + f.getDepartureTime() + " | Arrival: " + f.getArrivalTime());
                         }
                     }
                     break; // Exit the loop after viewing all flights
@@ -252,10 +238,22 @@ public class Main {
                                         f.getFlightNumber(),
                                         f.getAirline(),
                                         f.getOrigin(),
-                                        f.getDestination());
+                                        f.getDestination(),
+                                        f.getDepartureTime());
+
                             }
                             break; // Exit the loop after searching for flights
                         case "2":
+                            System.out.println("Enter customer username: ");
+                            String customerUsername = input.nextLine().trim();
+
+                            User customer = system.findUserByUsername(customerUsername); // Get the customer by username
+                            if (customer == null || !(customer instanceof Customer)) {
+                                System.out.println("Customer not found or invalid user type.");
+                                break; // Exit the loop if customer is not found
+                            }
+                            Customer customer2 = (Customer) customer; // Cast the user to Customer
+
                             System.out.print("Origin: ");
                             String origin2 = input.nextLine().trim();
                             System.out.print("Destination: "); 
@@ -272,26 +270,17 @@ public class Main {
                                         f.getFlightNumber(),
                                         f.getAirline(),
                                         f.getOrigin(),
-                                        f.getDestination());
+                                        f.getDestination(),
+                                        f.getDepartureTime()
+                                        );
                             }
                             System.out.print("Select flight (1-" + flights2.size() + "): ");
                             int select2 = Integer.parseInt(input.nextLine()) - 1;
                             Flight selectedFlight2 = flights2.get(select2); // Get the selected flight
-                            System.out.print("Number of passengers: ");
-                            int numPax2 = Integer.parseInt(input.nextLine().trim());
-                            List<Passenger> passengers2 = new ArrayList<>();
-                            for (int i = 1; i <= numPax2; i++){
-                                System.out.printf("Passenger %d ID: ", i);
-                                String passengerID = input.nextLine().trim();
-                                System.out.printf("Passenger %d name: ", i);
-                                String name = input.nextLine().trim();
-                                System.out.printf("Passenger %d passport number: ", i);
-                                String passport = input.nextLine().trim();
-                                System.out.printf("Passenger %d date of birth (YYYY-MM-DD): ", i);
-                                LocalDate dob = LocalDate.parse(input.nextLine().trim());
-                                passengers2.add(new Passenger(passengerID, name, passport, dob)); // Add the passenger to the list
-                            }
-                            Customer customer2 = (Customer) system.getCurrentUser(); // Get the current user
+
+                            Passenger passenger = new Passenger(customer2.getUserID(), customer2.getUsername(), customer2.getPassportNumber()); // Create a passenger object
+                            List<Passenger> passengers2 = Collections.singletonList(passenger); // Create a list of passengers with the customer as the only passenger
+
                             Booking booking2 = system.createBooking(customer2, selectedFlight2, passengers2); // Create a booking
                             System.out.println("\nBooking created! Reference: " + booking2.getBookingReference());
                             System.out.println("Total price: " + booking2.calculateTotalPrice()); // Calculate the total price of the booking

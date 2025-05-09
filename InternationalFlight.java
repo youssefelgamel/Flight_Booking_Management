@@ -22,8 +22,8 @@ public class InternationalFlight extends Flight {
         return base + INTERNATIONAL_SURCHARGE;
     }
 
-    public double calculatePrice(String seatClass) {
-        double base = classBasePrices.getOrDefault(seatClass, 0.0);
-        return base + INTERNATIONAL_SURCHARGE;
-    }
+    // public double calculatePrice(String seatClass) {
+    //     double base = classBasePrices.getOrDefault(seatClass, 0.0);
+    //     return base + INTERNATIONAL_SURCHARGE;
+    // }
 }

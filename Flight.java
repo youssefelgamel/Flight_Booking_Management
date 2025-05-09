@@ -10,7 +10,8 @@ public abstract class Flight implements Interfaces.PriceCalculatable {
     protected String destination;
     protected LocalDateTime departureTime; 
     protected LocalDateTime arrivalTime;  
-    protected Map<String, Double> classBasePrices; 
+    protected Map<String, Double> classBasePrices; // Map interface to store class base prices
+    // The key is the class name (e.g., "Economy", "Business"), and the value is the base price for that class.
 
 
     public Flight(String flightNumber,

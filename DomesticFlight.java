@@ -1,5 +1,5 @@
-import java.util.Map;
 import java.time.LocalDateTime;
+import java.util.Map;
 // -----------------------------------------------
 // Domestic flights
 public class DomesticFlight extends Flight {
@@ -21,9 +21,9 @@ public class DomesticFlight extends Flight {
         return base * (1 + DOMESTIC_TAX_RATE);
     }
 
-    /** Optionally, calculate a different class: */
-    public double calculatePrice(String seatClass) {
-        double base = classBasePrices.getOrDefault(seatClass, 0.0);
-        return base * (1 + DOMESTIC_TAX_RATE);
-    }
+    // /** Optionally, calculate a different class: */
+    // public double calculatePrice(String seatClass) {
+    //     double base = classBasePrices.getOrDefault(seatClass, 0.0);
+    //     return base * (1 + DOMESTIC_TAX_RATE);
+    // }
 }

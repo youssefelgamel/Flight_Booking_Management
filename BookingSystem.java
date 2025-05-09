@@ -3,25 +3,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class BookingSystem implements Interfaces.Aunthenticatable{
-    private List<User> users; 
-    private List<Flight> flights; 
-    private List<Booking> bookings;
-    private List<Payment> payments; 
-    private List<Passenger> passengers;
+public class BookingSystem implements Interfaces.Aunthenticatable{ // The Baba class 
+    private List<User> users = new ArrayList<>(); // List of users
+    private List<Flight> flights = new ArrayList<>(); // List of flights
+    private List<Booking> bookings = new ArrayList<>(); // List of bookings
+    private List<Payment> payments = new ArrayList<>(); // List of payments
+    private List<Passenger> passengers = new ArrayList<>(); // List of passengers
     private User currentUser;
+    private int userIdCounter = 0; // Counter for user IDs
 
-    public BookingSystem(){
-        try{
-        // Load data from files 
+    public BookingSystem() throws IOException {
         users = FileManager.loadUsers(); // Load users from file
         flights = FileManager.loadFlights();
         passengers = FileManager.loadPassengers(); // Load passengers from file
         bookings = FileManager.loadBookings(users, flights, passengers); 
         payments = FileManager.loadPayments();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -75,15 +71,15 @@ public User getCurrentUser() {
     return currentUser; // Return the current user
 }
 
-public User register(String username, String password, String email,String role) throws IOException {
+public User register(String username, String password, String email,String role, String passportNumber) throws IOException {
     // Check if the username already exists
     for (User user : users){
         if (user.getUsername().equalsIgnoreCase(username)){
             throw new IllegalArgumentException("Username already exists!"); // Throw exception if username exists
         }
     }
-    String userId = UUID.randomUUID().toString(); // Generate a unique user ID
-    User user;
+    String userId = String.valueOf(userIdCounter++); // Generate a unique user ID
+    User user; // Declare user variable
     switch (role.toUpperCase()){
         case "AGENT":
             user = new Agent(userId, username, password, email,"Default Agency"); // Create a new agent
@@ -93,7 +89,7 @@ public User register(String username, String password, String email,String role)
             user = new Administrator(userId, username, password, email); // Create a new admin
             break;
         default:
-            user = new Customer(userId, username, password, email); // Create a new customer
+            user = new Customer(userId, username, password, email, passportNumber); // Create a new customer
     }
 
     users.add(user); // Add user to the list
@@ -111,6 +107,15 @@ public void addFlight(Flight flight) throws IOException {
 
 public List<Flight> getFlights(){
     return Collections.unmodifiableList(flights); // Return an unmodifiable view of the flights list
+}
+
+public User findUserByUsername(String username) {
+    for (User user : users) {
+        if (user.getUsername().equals(username)) {
+            return user; // Return the user if found
+        }
+    }
+    return null; // Return null if user not found
 }
 
 

@@ -31,12 +31,12 @@ public class Booking implements Interfaces.Ticketable{
         .append(" Airline: ").append(flight.getAirline()).append("\n")
         .append(" Origin: ").append(flight.getOrigin()).append("\n")
         .append(" Destination: ").append(flight.getDestination()).append("\n")
-        .append(" Passengers: \n").append("ID\tName\tPassport Number\tSpecial Requests\n");
+        .append(" Passengers: \n").append("ID\tName\tPassport Number\n");
         for (Passenger passenger : passengers) {
             sb.append(passenger.getPassengerID()).append("\t")
             .append(passenger.getName()).append("\t")
-            .append(passenger.getPassportNumber()).append("\t")
-            .append(passenger.getDateOfBirth()).append("\t");
+            .append(passenger.getPassportNumber()).append("\t");
+            System.out.println("");
         }
 
         return sb.toString();
