@@ -14,76 +14,78 @@ public class Main {
             return;
         }
 
-            // Registration or login
-        while (true){
+        outer:
+        while (true) {
             System.out.println("Welcome to The Flight Booking Management System");
             System.out.println("1. Login");
             System.out.println("2. Register");
             System.out.println("0. Exit");
-            String choice = input.nextLine().trim(); // trim to remove whitespace from both sides of a string
-            try {
-                if (choice.equals("1")){
+            System.out.print("Select option: ");
+            String choice = input.nextLine().trim();
+
+            switch (choice) {
+                case "1":
+                    // Login flow
                     System.out.print("Username: ");
                     String username = input.nextLine().trim();
                     System.out.print("Password: ");
                     String password = input.nextLine().trim();
-                    if ( system.login(username, password)){
-                        System.out.println("Logged in as " + username + "\n");
-                        break; // Exit the loop if login is successful
-                    } else {
-                        System.err.println("Login failed for " + username);
+                    if (!system.login(username, password)) {
+                        System.err.println("Login failed for " + username + "\n");
+                        continue outer;
                     }
-                }else if (choice.equals("2")){
+                    System.out.println("Logged in as " + username + "\n");
+                    break;
+
+                case "2":
+                    // Registration flow
                     System.out.print("Username: ");
                     String newUser = input.nextLine().trim();
                     System.out.print("Password: ");
-                    String newPassword = input.nextLine().trim();
+                    String newPass = input.nextLine().trim();
                     System.out.print("Email: ");
                     String newEmail = input.nextLine().trim();
-
-                    // Role selection
                     System.out.print("Select role (1- Customer, 2- Administrator, 3- Agent): ");
                     String roleChoice = input.nextLine().trim();
+
                     String role;
                     switch (roleChoice) {
-                        case "1":
-                            role = "Customer";
-                            break;
-                        case "2":
-                            role = "Administrator";
-                            break;
-                        case "3":
-                            role = "Agent";
-                            break;
+                        case "1": role = "Customer";     break;
+                        case "2": role = "Administrator"; break;
+                        case "3": role = "Agent";        break;
                         default:
-                            System.err.println("Invalid role selection. Defaulting to Customer.");
+                            System.err.println("Invalid role; defaulting to Customer.");
                             role = "Customer";
                     }
 
-                    String passportnumber = "";
+                    String passport = "";
                     if (role.equals("Customer")) {
                         System.out.print("Passport number: ");
-                        passportnumber = input.nextLine().trim();
+                        passport = input.nextLine().trim();
                     }
 
-                    system.register(newUser, newPassword, newEmail,role, passportnumber); // Register the user
-                    System.out.println("Registeration successful! you can now login \n");
-                }else if (choice.equals("0")){
-                    System.out.println("Exiting the system. Goodbye!");
-                    input.close();
-                    return; // Exit the program
-                }else {
-                    System.err.println("Invalid choice. Please try again.");
-                }
-            }catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
+                    try {
+                        system.register(newUser, newPass, newEmail, role, passport);
+                        System.out.println("Registration successful! Please log in.\n");
+                    } catch (Exception e) {
+                        System.err.println("Registration error: " + e.getMessage() + "\n");
+                    }
+                    continue outer;
+
+                case "0":
+                    System.out.println("Goodbye!");
+                    break outer;
+
+                default:
+                    System.err.println("Invalid choice\n");
+                    continue outer;
             }
-        }
                 
         // Main menu loop
         User currentUser = system.getCurrentUser(); // Get the current user after login
-        boolean running = true;
-        while (running){
+        
+        inner:
+        while (true){
             System.out.println("Main Menu:");
             if (currentUser instanceof Customer){ // check if the current user is a customer
 
@@ -129,16 +131,21 @@ public class Main {
                         System.out.println();
                     } else {
                         System.out.println("Your bookings:");
-                        for (Booking b : bookings){
-                            System.out.println(b.generateTicket());
+                        for (Booking b : bookings) {
+                            try {
+                                System.out.println(b.generateTicket());
+                            } catch (NullPointerException npe) {
+                                System.err.println(" Skipping booking " 
+                                    + b.getBookingReference() 
+                                    + ": missing passenger data");
+                            }
                         }
                     }
                     break; // Exit the loop after viewing bookings
                 case "3":
                     system.logout(); // Logout the user
                     System.out.println("Logged out. Thank you for using the system.");
-                    running = false; // Exit the main menu loop
-                    break;
+                    break inner;
                 default:
                     System.err.println("Invalid choice. Please try again.");
                     break; // Exit the loop if an invalid choice is made
@@ -208,8 +215,7 @@ public class Main {
                 case "3":
                     system.logout(); // Logout the user
                     System.out.println("Logged out. Thank you for using the system.");
-                    running = false; // Exit the main menu loop
-                    break;
+                    break inner;
                 default:
                     System.err.println("Invalid choice. Please try again.");
                     break;} // Exit the loop if an invalid choice is made
@@ -288,13 +294,13 @@ public class Main {
                         case "3":
                             system.logout(); // Logout the user
                             System.out.println("Logged out. Thank you for using the system.");
-                            running = false; // Exit the main menu loop
-                            break;
+                            break inner;
                         default:
                             System.err.println("Invalid choice. Please try again.");
                     }
                 }
                 }
-        input.close(); // Close the scanner
     }
+            input.close();
+}
 }

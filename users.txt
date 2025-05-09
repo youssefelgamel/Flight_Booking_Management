@@ -1,0 +1,3 @@
+0,Dezllar,1234lol,Dezllar@gmail.com,123456,CUSTOMER
+1,Maro,1234lol,Maro@gmail.com,ADMININSTRATOR
+2,Momen,1234lol,Momen@gmail.com,AGENT

@@ -1,0 +1,1 @@
+INTERNATIONAL,1,Qatar,Egypt,Japan,2025-05-20T10:00,2025-05-21T11:30,Economy=200.0;First class=500.0

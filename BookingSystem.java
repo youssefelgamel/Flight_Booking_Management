@@ -46,11 +46,24 @@ public List<Flight> searchFlights(String origin, String destination){
             .collect(Collectors.toList()); // Filter flights based on origin and destination
 }
 
-public Booking createBooking(Customer customer, Flight flight, List<Passenger> passengers){
+public Booking createBooking(Customer customer, Flight flight, List<Passenger> newPassengers){
     String ref = UUID.randomUUID().toString(); // Generate a unique booking reference
     Booking booking = new Booking(ref, customer, flight, passengers); // Create a new booking
     bookings.add(booking); // Add booking to the list
     customer.addBooking(booking); // Add booking to the customer's list of bookings
+
+    try{    FileManager.saveBookings(bookings);
+    }catch (IOException e){
+        System.out.println("Error saving bookings: " + e.getMessage()); // Handle file saving error
+    }
+
+    this.passengers.addAll(newPassengers);
+    try {
+        FileManager.savePassengers(this.passengers); // Save passengers to file
+    } catch (IOException e) {
+        System.out.println("Error saving passengers: " + e.getMessage()); // Handle file saving error
+    }
+
     return booking; // Return the created booking
 }
 
