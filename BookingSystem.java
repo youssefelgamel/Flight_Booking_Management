@@ -18,6 +18,17 @@ public class BookingSystem implements Interfaces.Aunthenticatable{ // The Baba c
         passengers = FileManager.loadPassengers(); // Load passengers from file
         bookings = FileManager.loadBookings(users, flights, passengers); 
         payments = FileManager.loadPayments();
+
+        userIdCounter = users.stream()
+                .mapToInt(u -> {
+                    try {
+                        return Integer.parseInt(u.getUserID());
+                    } catch (NumberFormatException e) {
+                        return -1; // Default value if parsing fails
+                    }
+                })
+                .max()
+                .orElse(-1) + 1; // Increment the max user ID by 1 for the next user
     }
 
     @Override
@@ -48,7 +59,7 @@ public List<Flight> searchFlights(String origin, String destination){
 
 public Booking createBooking(Customer customer, Flight flight, List<Passenger> newPassengers){
     String ref = UUID.randomUUID().toString(); // Generate a unique booking reference
-    Booking booking = new Booking(ref, customer, flight, passengers); // Create a new booking
+    Booking booking = new Booking(ref, customer, flight, new ArrayList<>(newPassengers)); // Create a new booking
     bookings.add(booking); // Add booking to the list
     customer.addBooking(booking); // Add booking to the customer's list of bookings
 

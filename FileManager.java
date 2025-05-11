@@ -207,9 +207,13 @@ public class FileManager {
     public static void saveBookings(List<Booking> bookings) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
             for (Booking b : bookings) {
-                String paxIds = b.getPassengers().stream()
-                                .map(Passenger::getPassengerID)
-                                .collect(Collectors.joining("|"));
+            // null‐safe passengers list
+            List<Passenger> pax = b.getPassengers();
+            String paxIds = (pax == null || pax.isEmpty())
+                ? ""
+                : pax.stream()
+                    .map(Passenger::getPassengerID)
+                    .collect(Collectors.joining("|"));
                 bw.write(String.join(",",
                             b.getBookingReference(),
                             b.getCustomer().getUserID(),

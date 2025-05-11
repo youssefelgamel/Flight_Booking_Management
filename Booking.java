@@ -1,11 +1,12 @@
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Booking implements Interfaces.Ticketable{
     private String bookingReference;
     private Customer customer;          // “has-a” relationship "composition"
     private Flight flight;              // “has-a” relationship "composition"
-    private List<Passenger> passengers; // “has-many” relationship "aggregation"
+    private List<Passenger> passengers = new ArrayList<>(); // “has-many” relationship "aggregation"
     private boolean paymentConfirmed;
 
     public Booking(String bookingReference,Customer customer, Flight flight, List<Passenger> passengers) {
@@ -20,6 +21,9 @@ public class Booking implements Interfaces.Ticketable{
         return bookingReference;
     }
 
+    public void setPassengersList(List<Passenger> passengers) {
+        this.passengers = passengers;
+    }
 
     // Generate a Wonderful ticket!
     @Override
@@ -35,8 +39,8 @@ public class Booking implements Interfaces.Ticketable{
         for (Passenger passenger : passengers) {
             sb.append(passenger.getPassengerID()).append("\t")
             .append(passenger.getName()).append("\t")
-            .append(passenger.getPassportNumber()).append("\t");
-            System.out.println("");
+            .append(passenger.getPassportNumber()).append("\t")
+            .append("\n");
         }
 
         return sb.toString();
