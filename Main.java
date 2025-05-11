@@ -283,13 +283,40 @@ public class Main {
                             System.out.print("Select flight (1-" + flights2.size() + "): ");
                             int select2 = Integer.parseInt(input.nextLine()) - 1;
                             Flight selectedFlight2 = flights2.get(select2); // Get the selected flight
-
                             Passenger passenger = new Passenger(customer2.getUserID(), customer2.getUsername(), customer2.getPassportNumber()); // Create a passenger object
                             List<Passenger> passengers2 = Collections.singletonList(passenger); // Create a list of passengers with the customer as the only passenger
 
                             Booking booking2 = system.createBooking(customer2, selectedFlight2, passengers2); // Create a booking
-                            System.out.println("\nBooking created! Reference: " + booking2.getBookingReference());
                             System.out.println("Total price: " + booking2.calculateTotalPrice()); // Calculate the total price of the booking
+
+                            System.out.print("Enter payment method (1- CreditCard, 2- Bank transfer): ");
+                            String paymentMethod = input.nextLine().trim();
+                            Interfaces.PaymentProcessor processor;
+                            Payment payment;
+                            if (paymentMethod.equals("1")) {
+                                System.out.print("Enter card number: ");
+                                String cardNumber = input.nextLine().trim();
+                                System.out.print("Enter CVV: ");
+                                String cvv = input.nextLine().trim();
+                                processor = new CreditCardPayment();
+                                payment = new CreditCardPayment(booking2.getBookingReference(), booking2.calculateTotalPrice(),cardNumber, cvv); // Create a credit card payment
+                            } else {
+                                System.out.print("Enter bank account number: ");
+                                String accountNumber = input.nextLine().trim();
+                                processor = new BankTransferPayment();
+                                payment = new BankTransferPayment(booking2.getBookingReference(), booking2.calculateTotalPrice(), accountNumber); // Create a bank transfer payment
+                            }
+
+                            try {
+                                if (system.processPayment(booking2, processor, payment)){
+                                    System.out.println("Payment processed successfully!"); // Process the payment
+                                } else {
+                                    System.out.println("Payment failed. Please try again."); // Handle payment failure
+                                }
+                            } catch (Exception e) {
+                                System.err.println("Error processing payment: " + e.getMessage()); // Handle payment processing error
+                            }
+                            System.out.println("\nBooking created! Reference: " + booking2.getBookingReference());
                             break; // Exit the loop after creating a booking
                         case "3":
                             system.logout(); // Logout the user

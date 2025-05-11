@@ -273,12 +273,9 @@ public class FileManager {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(PAYMENTS_FILE))) {
             for (Payment p : payments) {
                 bw.write(String.join(",",
-                            p.getPaymentID(),
                             p.getBookingReference(),
-                            String.valueOf(p.getAmount()),
-                            p.getMethod(),
-                            p.getTimestamp().toString(),
-                            p.getStatus()));
+                            String.valueOf(p.getAmount())
+                            ));
                 bw.newLine();
             }
         }
@@ -293,18 +290,13 @@ public class FileManager {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.isBlank()) continue;
-                String[] p = line.split(",", 6);
-                if (p.length != 6) {
-                    throw new IllegalArgumentException("Expected 6 fields " + line);
+                String[] p = line.split(",", 2);
+                if (p.length != 2) {
+                    throw new IllegalArgumentException("Expected 2 fields " + line);
                 }
-                Payment pay = new Payment(
-                    p[0].trim(),
-                    p[1].trim(),
-                    Double.parseDouble(p[2].trim()),
-                    p[3].trim(),
-                    LocalDateTime.parse(p[4].trim()),
-                    p[5].trim()
-                );
+                String ref = p[0].trim();
+                double amount = Double.parseDouble(p[1].trim());
+                Payment pay = new Payment(ref, amount);
                 payments.add(pay);
             }
         }

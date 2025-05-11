@@ -7,7 +7,7 @@ public class Booking implements Interfaces.Ticketable{
     private Customer customer;          // “has-a” relationship "composition"
     private Flight flight;              // “has-a” relationship "composition"
     private List<Passenger> passengers = new ArrayList<>(); // “has-many” relationship "aggregation"
-    private boolean paymentConfirmed;
+    private boolean paymentConfirmed = false;
 
     public Booking(String bookingReference,Customer customer, Flight flight, List<Passenger> passengers) {
         this.bookingReference = bookingReference;

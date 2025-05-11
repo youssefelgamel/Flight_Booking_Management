@@ -1,40 +1,32 @@
-import java.time.LocalDateTime;
 
-public class Payment {
-    private String paymentID;
+public class Payment implements Interfaces.PaymentProcessor{
     private String bookingReference;
     private double amount;
-    private String method; // paying method
-    private LocalDateTime timestamp; // payment time
-    private String status; 
 
-
-    public Payment(String paymentID, String bookingReference, double amount, String method,LocalDateTime timestamp ,String status){
-        this.paymentID = paymentID;
+    public Payment() {}
+    public Payment(String bookingReference, double amount){
         this.bookingReference = bookingReference;
         this.amount = amount;
-        this.method = method;
-        this.timestamp = timestamp;
-        this.status = status;
     }
-    public String getPaymentID() {
-        return paymentID;
-    }
-    public String getBookingReference() {
+        public String getBookingReference() {
         return bookingReference;
     }
     public double getAmount() {
         return amount;
     }
-    public String getMethod() {
-        return method;
-    }
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-    public String getStatus() {
-        return status;
-    }
 
-
+    @Override
+    public boolean processPayment(Payment payment) {
+        // For example, you can check if the amount is valid and return true or false
+        return payment.getAmount() > 0; // Example: return true if amount is positive
+    }
 }
+
+
+
+
+
+
+
+
+

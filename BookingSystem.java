@@ -78,14 +78,18 @@ public Booking createBooking(Customer customer, Flight flight, List<Passenger> n
     return booking; // Return the created booking
 }
 
-public boolean processPayment(Booking booking, Interfaces.PaymentProcessor processor, Payment payment){
-    boolean ok = processor.processPayment(payment); // Process the payment using the provided processor
-    if (ok) {
-        booking.confirmPayment(); // Confirm payment for the booking
-        payments.add(payment); // Add payment to the list
+public boolean processPayment(Booking booking, Interfaces.PaymentProcessor processor, Payment payment) throws Exception {
+    if (!booking.getBookingReference().equals(payment.getBookingReference())){
+        throw new IllegalArgumentException("Payment reference doesn't match"); // Check if the booking reference matches
     }
-    return ok; // Return the payment status
+    boolean ok = processor.processPayment(payment);
+    if (ok){
+        booking.confirmPayment(); // Mark the booking as paid
+    }
+    return ok;
+
 }
+
 
 public String generateTicket(Booking booking) {
     return booking.generateTicket(); // Generate ticket for the booking
