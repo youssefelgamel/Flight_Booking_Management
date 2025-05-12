@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class BookingSystem implements Interfaces.Aunthenticatable{ // The Baba class 
+public class BookingSystem implements Interfaces.Validation{ // The Baba class 
     private List<User> users = new ArrayList<>(); // List of users
     private List<Flight> flights = new ArrayList<>(); // List of flights
     private List<Booking> bookings = new ArrayList<>(); // List of bookings
@@ -60,6 +60,7 @@ public List<Flight> searchFlights(String origin, String destination){ // Seachin
 public Booking createBooking(Customer customer, Flight flight, List<Passenger> newPassengers){
     String ref = UUID.randomUUID().toString(); // Generate a unique booking reference
     Booking booking = new Booking(ref, customer, flight, new ArrayList<>(newPassengers)); // Create a new booking
+    booking.confirmPayment();
     bookings.add(booking); // Add booking to the list
     customer.addBooking(booking); // Add booking to the customer's list of bookings
 
@@ -78,7 +79,7 @@ public Booking createBooking(Customer customer, Flight flight, List<Passenger> n
     return booking; // Return the created booking
 }
 
-public boolean processPayment(Booking booking, Interfaces.PaymentProcessor processor, Payment payment) throws Exception {
+public boolean processPayment(Booking booking, Interfaces.PaymentProcessing processor, Payment payment) throws Exception {
     if (!booking.getBookingReference().equals(payment.getBookingReference())){
         throw new IllegalArgumentException("Payment reference doesn't match"); // Check if the booking reference matches
     }

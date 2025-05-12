@@ -1,8 +1,8 @@
 
-public class Payment implements Interfaces.PaymentProcessor{
+public class Payment implements Interfaces.PaymentProcessing{
     
-    private String bookingReference;
-    private double amount;
+    protected  String bookingReference;
+    protected  double amount;
 
     public Payment() {}
     public Payment(String bookingReference, double amount){

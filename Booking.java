@@ -2,11 +2,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Booking implements Interfaces.Ticketable{
+public class Booking implements Interfaces.Ticket{
     private String bookingReference;
-    private Customer customer;          // “has-a” relationship "composition"
-    private Flight flight;              // “has-a” relationship "composition"
-    private List<Passenger> passengers = new ArrayList<>(); // “has-many” relationship "aggregation"
+    private Customer customer;          // “has-a” relationship
+    private Flight flight;              // “has-a” relationship 
+    private List<Passenger> passengers = new ArrayList<>(); // “has-a” relationship "composition" (Booking owns Passengers)
     private boolean paymentConfirmed;
 
     public Booking(String bookingReference,Customer customer, Flight flight, List<Passenger> passengers) {

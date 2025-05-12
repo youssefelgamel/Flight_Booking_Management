@@ -1,19 +1,19 @@
 public class Interfaces{
 
-    public interface Aunthenticatable{ // is acceptable to log in\out.
+    public interface Validation{ // is acceptable to log in\out.
         boolean login(String username, String password);
         void logout();
     }
     
-    public interface PriceCalculatable{
+    public interface CalculatePrice{
         double calculatePrice();
     }
     
-    public interface Ticketable{
+    public interface Ticket{
         String generateTicket();
     }
     
-    public interface PaymentProcessor{
+    public interface PaymentProcessing{
         boolean processPayment(Payment payment);
     }
     

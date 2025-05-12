@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 // 1) Abstract Flight now takes its base-prices map in the constructor:
-public abstract class Flight implements Interfaces.PriceCalculatable {
+public abstract class Flight implements Interfaces.CalculatePrice{
     protected String flightNumber;
     protected String airline;
     protected String origin;
@@ -11,7 +11,7 @@ public abstract class Flight implements Interfaces.PriceCalculatable {
     protected LocalDateTime departureTime; 
     protected LocalDateTime arrivalTime;  
     protected Map<String, Double> classBasePrices; // Map interface to store class base prices
-    // The key is the class name (e.g., "Economy", "Business"), and the value is the base price for that class.
+    // The key is the class name (e.g., "Economy", "First Class"), and the value is the base price for that class.
 
 
     public Flight(String flightNumber,
@@ -41,6 +41,38 @@ public abstract class Flight implements Interfaces.PriceCalculatable {
     @Override
     public abstract double calculatePrice();
 }
+
+
+class Aircraft{
+
+    private String engine;
+
+    public Aircraft(){}
+    public Aircraft(String engine){
+        this.engine = engine;
+    }
+
+    public String getEngine(){
+        return engine;
+    }
+}
+
+
+class Airline{
+
+    private String airlineName;
+    private Aircraft aircraft; // Airline “has-a” Aircraft (aggregation)
+
+    public Airline(String airlineName, Aircraft aircraft){
+        this.airlineName = airlineName;
+        this.aircraft = aircraft;
+    }
+
+    public Aircraft geAircraft(){
+        return aircraft;
+    }
+}
+
 
 
 

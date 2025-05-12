@@ -3,7 +3,8 @@ import java.util.Map;
 // -----------------------------------------------
 // International flights
 public class InternationalFlight extends Flight {
-    private static final double INTERNATIONAL_SURCHARGE = 50.0;
+    
+    private static final double International_Charge = 50.0;
 
     public InternationalFlight(String flightNumber,
                             String airline,
@@ -18,8 +19,13 @@ public class InternationalFlight extends Flight {
 
     @Override
     public double calculatePrice() {
-        double base = classBasePrices.getOrDefault("Economy", 0.0);
-        // add a flat surcharge rather than multiplying
-        return base + INTERNATIONAL_SURCHARGE;
+        double base;
+        if(classBasePrices.containsKey("Economy")){
+            base = classBasePrices.getOrDefault("Economy", 0.0);
+        }else{
+            base = classBasePrices.getOrDefault("First Class", 0.0);
+        }
+
+        return base + International_Charge;
     }
 }

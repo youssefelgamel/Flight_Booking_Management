@@ -181,9 +181,9 @@ public class FileManager {  // static and final data field that are no longer ca
     //
     // --- Passengers ---
     //
-    public static void savePassengers(List<Passenger> pax) throws IOException {
+    public static void savePassengers(List<Passenger> passengers) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(PASSENGERS_FILE))) {
-            for (Passenger p : pax) {
+            for (Passenger p : passengers) {
                 bw.write(String.join(",",
                             p.getPassengerID(),
                             p.getName(),
@@ -194,26 +194,26 @@ public class FileManager {  // static and final data field that are no longer ca
     }
 
     public static List<Passenger> loadPassengers() throws IOException {
-        List<Passenger> pax = new ArrayList<>();
+        List<Passenger> passengers = new ArrayList<>();
         File f = new File(PASSENGERS_FILE);
-        if (!f.exists()) return pax;
+        if (!f.exists()) return passengers;
 
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.isBlank()) continue;
+                if (line.isBlank() || line.startsWith("\\")) continue;
                 String[] p = line.split(",");
                 if (p.length != 3) {
                     throw new IllegalArgumentException("Expected 3 fields " + line);
                 }
-                pax.add(new Passenger(
+                passengers.add(new Passenger(
                     p[0].trim(),
                     p[1].trim(),
                     p[2].trim()
                 ));
             }
         }
-        return pax;
+        return passengers;
     }
 
     //

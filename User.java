@@ -1,5 +1,5 @@
 
-public abstract class User implements Interfaces.Aunthenticatable{ // This superclass is gonna be extended to Customer, Agent and Administrator subclasses.
+public abstract class User implements Interfaces.Validation{ // This superclass is gonna be extended to Customer, Agent and Administrator subclasses.
     protected String userID;
     protected String username;
     protected String password; // Passwords must be at least 6 characters with letters and numbers
@@ -97,22 +97,13 @@ class Administrator extends User{
     public boolean login(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
     }
-
-    public String getAdminSecurityLevel(){
-        return AdminSecurityLevel;
-    }
     
     @Override
     public void logout() {
         // Logic for user logout
     }
 
-    public void addFlight(Flight flight) {
-        // Logic to add flight to the system
+    public String getAdminSecurityLevel(){
+        return AdminSecurityLevel;
     }
-
-    public void removeFlight(Flight flight) {
-        // Logic to remove flight from the system
-    }
-
 }

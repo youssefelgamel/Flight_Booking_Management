@@ -161,6 +161,10 @@ public class Main {
                 try{
                     System.out.print("1- Domestic flight\n2- International flight\nSelect option: ");
                     String flightType = input.nextLine().trim();
+                    if (!(flightType.equals("1") || flightType.equals("2"))){
+                        System.err.println("Invalid Flgiht type");
+                        break;
+                    }
                         System.out.print("Flight number: ");
                         String flightNumber = input.nextLine().trim();
                         System.out.print("Airline: ");
@@ -284,14 +288,14 @@ public class Main {
                             int select2 = Integer.parseInt(input.nextLine()) - 1;
                             Flight selectedFlight2 = flights2.get(select2); // Get the selected flight
                             Passenger passenger = new Passenger(customer.getUserID(), customer.getUsername(), customer.getPassportNumber()); // Create a passenger object
-                            List<Passenger> passengers2 = Collections.singletonList(passenger); // Create a list of passengers with the customer as the only passenger
+                            List<Passenger> passengers2 = Collections.singletonList(passenger); // Create a list of passengers with the customer
 
-                            Booking booking2 = system.createBooking(customer, selectedFlight2, passengers2); // Create a booking
+                            Booking booking2 = system.createBooking(customer, selectedFlight2, passengers2);
                             System.out.println("Total price: " + booking2.calculateTotalPrice()); // Calculate the total price of the booking
 
                             System.out.print("Enter payment method (1- CreditCard, 2- Bank transfer): "); // Process payment.
                             String paymentMethod = input.nextLine().trim();
-                            Interfaces.PaymentProcessor processor;
+                            Interfaces.PaymentProcessing processor;
                             Payment payment;
                             if (paymentMethod.equals("1")) {
                                 System.out.print("Enter card number: ");
@@ -310,6 +314,7 @@ public class Main {
                             try {
                                 if (system.processPayment(booking2, processor, payment)){
                                     System.out.println("Payment processed successfully!"); // Process the payment
+                                    booking2.confirmPayment();
                                 } else {
                                     System.out.println("Payment failed. Please try again."); // Handle payment failure
                                 }
@@ -318,6 +323,8 @@ public class Main {
                             }
                             System.out.println("\nBooking created! Reference: " + booking2.getBookingReference());
                             break; // Exit the loop after creating a booking
+
+
                         case "3":
                             system.logout(); // Logout the user
                             System.out.println("Logged out. Thank you for using the system.");

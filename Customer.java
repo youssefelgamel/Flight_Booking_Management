@@ -4,7 +4,6 @@ import java.util.List;
 //--------------------- Customer ---------------------
 class Customer extends User{
 
-
     private String passportNumber;
     private List<Booking> bookings = new ArrayList<>(); // Marked private to enforce encapsulation (no one outside the class can directly manipulate the list).
 
