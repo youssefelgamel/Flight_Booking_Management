@@ -16,7 +16,9 @@ public class Main {
 
         outer:
         while (true) {
+            System.out.println("===============================================");
             System.out.println("Welcome to The Flight Booking Management System");
+            System.out.println("===============================================");
             System.out.println("1. Login");
             System.out.println("2. Register");
             System.out.println("0. Exit");
