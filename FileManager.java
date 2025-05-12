@@ -101,11 +101,10 @@ public class FileManager {  // static and final data field that are no longer ca
 
                     case "ADMININSTRATOR":
                     case "ADMIN":
-                        if (p.length != 6) {
-                            throw new IllegalArgumentException("Expected 6 fields " + line);
+                        if (p.length != 5) {
+                            throw new IllegalArgumentException("Expected 5 fields " + line);
                         }
-                            String AdminSecurityLevel = p[4].trim();
-                            users.add(new Administrator(p[0],p[1],p[2],p[3],AdminSecurityLevel));
+                            users.add(new Administrator(p[0],p[1],p[2],p[3]));
                             break;
                     default:
                         System.out.println("Unknown user type, skipping: " + role);
