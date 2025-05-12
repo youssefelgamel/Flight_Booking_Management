@@ -7,7 +7,7 @@ public class Booking implements Interfaces.Ticketable{
     private Customer customer;          // “has-a” relationship "composition"
     private Flight flight;              // “has-a” relationship "composition"
     private List<Passenger> passengers = new ArrayList<>(); // “has-many” relationship "aggregation"
-    private boolean paymentConfirmed = false;
+    private boolean paymentConfirmed;
 
     public Booking(String bookingReference,Customer customer, Flight flight, List<Passenger> passengers) {
         this.bookingReference = bookingReference;
@@ -19,10 +19,6 @@ public class Booking implements Interfaces.Ticketable{
 
     public String getBookingReference() {
         return bookingReference;
-    }
-
-    public void setPassengersList(List<Passenger> passengers) {
-        this.passengers = passengers;
     }
 
     // Generate a Wonderful ticket!
@@ -65,7 +61,7 @@ public class Booking implements Interfaces.Ticketable{
     public Flight getFlight() {
         return flight;
     }
-    
+
     public List<Passenger> getPassengers() {
         return passengers;
     }

@@ -22,13 +22,13 @@ public class BookingSystem implements Interfaces.Aunthenticatable{ // The Baba c
         userIdCounter = users.stream()
                 .mapToInt(u -> {
                     try {
-                        return Integer.parseInt(u.getUserID());
+                        return Integer.parseInt(u.getUserID()); // loading the String ID and convert it to Integer.
                     } catch (NumberFormatException e) {
                         return -1; // Default value if parsing fails
                     }
                 })
-                .max()
-                .orElse(-1) + 1; // Increment the max user ID by 1 for the next user
+                .max() // This finds the largers integer value.
+                .orElse(-1) + 1; // If the stream is empty -> fall back to -1. Otherwise increment the max user ID by 1 for the next user
     }
 
     @Override
@@ -44,14 +44,14 @@ public class BookingSystem implements Interfaces.Aunthenticatable{ // The Baba c
 
     @Override
     public void logout() {
-        if (currentUser != null) {
+        if (currentUser != null) { // If there is exit a current user running the program.
             currentUser.logout();
         }
         currentUser = null;
 
     }
 
-public List<Flight> searchFlights(String origin, String destination){
+public List<Flight> searchFlights(String origin, String destination){ // Seaching the flights with the origin and the destination.
     return flights.stream()
             .filter(flight -> flight.getOrigin().equalsIgnoreCase(origin) && flight.getDestination().equalsIgnoreCase(destination))
             .collect(Collectors.toList()); // Filter flights based on origin and destination
@@ -82,7 +82,7 @@ public boolean processPayment(Booking booking, Interfaces.PaymentProcessor proce
     if (!booking.getBookingReference().equals(payment.getBookingReference())){
         throw new IllegalArgumentException("Payment reference doesn't match"); // Check if the booking reference matches
     }
-    boolean ok = processor.processPayment(payment);
+    boolean ok = processor.processPayment(payment); // payment is done.
     if (ok){
         booking.confirmPayment(); // Mark the booking as paid
     }
@@ -106,7 +106,7 @@ public User register(String username, String password, String email,String role,
             throw new IllegalArgumentException("Username already exists!"); // Throw exception if username exists
         }
     }
-    String userId = String.valueOf(userIdCounter++); // Generate a unique user ID
+    String userId = String.valueOf(userIdCounter++); // Generates an Incremental ID.
     User user; // Declare user variable
     switch (role.toUpperCase()){
         case "AGENT":
@@ -114,7 +114,7 @@ public User register(String username, String password, String email,String role,
             break;
         case "ADMIN":
         case "ADMINISTRATOR":
-            user = new Administrator(userId, username, password, email); // Create a new admin
+            user = new Administrator(userId, username, password, email,"Normal"); // Create a new admin
             break;
         default:
             user = new Customer(userId, username, password, email, passportNumber); // Create a new customer

@@ -2,4 +2,4 @@
 3,Mahdi,1234lol,Mahdi@gmail.com,1234567,CUSTOMER
 4,Jojo,1234lol,Jojo@gmail.com,123456789,CUSTOMER
 6,Momen,1234lol,Momen@gmail.com,Default Agency,AGENT
-7,Maro,1234lol,Maro@gmail.com,ADMININSTRATOR
+7,Maro,1234lol,Maro@gmail.com,Normal,ADMININSTRATOR

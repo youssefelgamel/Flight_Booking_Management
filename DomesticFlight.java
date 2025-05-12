@@ -12,18 +12,13 @@ public class DomesticFlight extends Flight {
                         LocalDateTime departureTime,
                         LocalDateTime arrivalTime,
                         Map<String, Double> classBasePrices) {
+
         super(flightNumber, airline, origin, destination,departureTime ,arrivalTime ,classBasePrices);
     }
 
     @Override
     public double calculatePrice() {
-        double base = classBasePrices.getOrDefault("Economy", 0.0);
-        return base * (1 + DOMESTIC_TAX_RATE);
+        double base = classBasePrices.getOrDefault("Economy", 0.0); // if there is no entry, default to 0.0
+        return base * (1 + DOMESTIC_TAX_RATE); // calculate the base fare.
     }
-
-    // /** Optionally, calculate a different class: */
-    // public double calculatePrice(String seatClass) {
-    //     double base = classBasePrices.getOrDefault(seatClass, 0.0);
-    //     return base * (1 + DOMESTIC_TAX_RATE);
-    // }
 }

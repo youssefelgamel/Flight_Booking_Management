@@ -16,7 +16,7 @@ public abstract class User implements Interfaces.Aunthenticatable{ // This super
     // Password handling
     // --------------------
 public void setPassword(String password) {
-    if (password.length() >= 6 && password.matches(".*[a-zA-Z].*") && password.matches(".*\\d.*")) {
+    if (password.length() >= 6 && password.matches(".*[a-zA-Z].*") && password.matches(".*\\d.*")) { // checks chars and numbers.
         this.password = password;  // Store password if it meets the criteria
     } else {
         throw new IllegalArgumentException("Password must be at least 6 characters with letters and numbers!");
@@ -86,13 +86,20 @@ class Agent extends User{
 //--------------------- Administrator ---------------------
 class Administrator extends User{
 
-    public Administrator(String userID, String username, String password, String email){
+    private String AdminSecurityLevel;
+
+    public Administrator(String userID, String username, String password, String email, String AdminSecutiyLevel){
         super(userID,username,password,email);
+        this.AdminSecurityLevel = AdminSecutiyLevel;
     }
 
     @Override
     public boolean login(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
+    }
+
+    public String getAdminSecurityLevel(){
+        return AdminSecurityLevel;
     }
     
     @Override

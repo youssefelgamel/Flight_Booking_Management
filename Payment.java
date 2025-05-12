@@ -1,5 +1,6 @@
 
 public class Payment implements Interfaces.PaymentProcessor{
+    
     private String bookingReference;
     private double amount;
 

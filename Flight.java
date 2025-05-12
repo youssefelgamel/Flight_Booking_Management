@@ -21,6 +21,7 @@ public abstract class Flight implements Interfaces.PriceCalculatable {
                 LocalDateTime departureTime,
                 LocalDateTime arrivalTime,
                 Map<String, Double> classBasePrices) {
+                    
         this.flightNumber     = flightNumber;
         this.airline          = airline;
         this.origin           = origin;

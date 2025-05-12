@@ -1,5 +1,3 @@
-
-
 public class Passenger {
     private String passengerID;
     private String name;

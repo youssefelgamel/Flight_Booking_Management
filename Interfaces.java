@@ -1,6 +1,6 @@
 public class Interfaces{
 
-    public interface Aunthenticatable{
+    public interface Aunthenticatable{ // is acceptable to log in\out.
         boolean login(String username, String password);
         void logout();
     }

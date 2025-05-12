@@ -12,6 +12,7 @@ public class InternationalFlight extends Flight {
                             LocalDateTime departureTime,
                             LocalDateTime arrivalTime,
                             Map<String, Double> classBasePrices) {
+
         super(flightNumber, airline, origin, destination, departureTime, arrivalTime, classBasePrices);
     }
 
@@ -21,9 +22,4 @@ public class InternationalFlight extends Flight {
         // add a flat surcharge rather than multiplying
         return base + INTERNATIONAL_SURCHARGE;
     }
-
-    // public double calculatePrice(String seatClass) {
-    //     double base = classBasePrices.getOrDefault(seatClass, 0.0);
-    //     return base + INTERNATIONAL_SURCHARGE;
-    // }
 }

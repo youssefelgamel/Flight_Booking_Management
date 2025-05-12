@@ -15,7 +15,7 @@ public class CreditCardPayment extends Payment{
         if (!(payment instanceof CreditCardPayment)){
             throw new IllegalArgumentException("Invalid payment type");
         }
-        CreditCardPayment creditCardPayment = (CreditCardPayment) payment;
+        CreditCardPayment creditCardPayment = (CreditCardPayment) payment; // casting to Creditcardpayment.
         System.out.println("Processing credit card payment for booking: " + creditCardPayment.getBookingReference());
         return true;
     }

@@ -1,8 +1,10 @@
 public class BankTransferPayment extends Payment{
+
     private String bankAccountNumber;
 
 
     public BankTransferPayment(){}
+
     public BankTransferPayment(String bookingReference, double amount, String bankAccountNumber) {
         super(bookingReference, amount); 
         this.bankAccountNumber = bankAccountNumber;
@@ -13,7 +15,7 @@ public class BankTransferPayment extends Payment{
         if (!(payment instanceof BankTransferPayment)){
             throw new IllegalArgumentException("Invalid payment type");
         }
-        BankTransferPayment bankTransferPayment = (BankTransferPayment) payment;
+        BankTransferPayment bankTransferPayment = (BankTransferPayment) payment; // casting to BankTarnsferPayment.
         System.out.println("Processing bank transfer payment for booking: " + bankTransferPayment.getBookingReference());
         return true;
     }

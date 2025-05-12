@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        BookingSystem system;
+        BookingSystem system; // An object of the booking system class.
 
         try {
             system = new BookingSystem();
@@ -111,16 +111,15 @@ public class Main {
                     System.out.println("Available flights:");
                     for (int i = 0; i < flights.size(); i++){
                         Flight f = flights.get(i);
-                        System.out.printf("%d) %s | %s to %s | Depart: %s\n",
-                            i+1,
-                            f.getFlightNumber(),
-                            f.getAirline(),
-                            f.getOrigin(),
-                            f.getDestination(),
-                            f.getDepartureTime()
-                            );
+                        System.out.println((i + 1) + ") " 
+                            + f.getFlightNumber() + " | "
+                            + f.getAirline() + " to "
+                            + f.getOrigin() + " | "
+                            + f.getDestination() + " | Depart: "
+                            + f.getDepartureTime());
+
                     }
-                    break; // Exit the loop after creating a booking
+                    break;
                 case "2":
                     // View Bookings
                     Customer currentCustomer = (Customer) system.getCurrentUser();
@@ -208,7 +207,12 @@ public class Main {
                     } else {
                         System.out.println("All flights:");
                         for (Flight f : allFlights){
-                            System.out.println(f.getFlightNumber() + " | " + f.getAirline() + " | " + f.getOrigin() + " to " + f.getDestination() + " | Depart: " + f.getDepartureTime() + " | Arrival: " + f.getArrivalTime());
+                            System.out.println(f.getFlightNumber()
+                            + " | " + f.getAirline() 
+                            + " | " + f.getOrigin() 
+                            + " to " + f.getDestination() 
+                            + " | Depart: " + f.getDepartureTime() 
+                            + " | Arrival: " + f.getArrivalTime());
                         }
                     }
                     break; // Exit the loop after viewing all flights
@@ -219,6 +223,7 @@ public class Main {
                 default:
                     System.err.println("Invalid choice. Please try again.");
                     break;} // Exit the loop if an invalid choice is made
+
                 }else{ // Agent
                     System.out.println("1) Search Flights");
                     System.out.println("2) Create Booking");
@@ -239,26 +244,23 @@ public class Main {
                             System.out.println("Available flights:");
                             for (int i = 0; i < flights.size(); i++){
                                 Flight f = flights.get(i);
-                                System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
-                                        i+1,
-                                        f.getFlightNumber(),
-                                        f.getAirline(),
-                                        f.getOrigin(),
-                                        f.getDestination(),
-                                        f.getDepartureTime());
-
+                                System.out.println((i + 1) + ") " 
+                                    + f.getFlightNumber() + " | "
+                                    + f.getAirline() + " to "
+                                    + f.getOrigin() + " | "
+                                    + f.getDestination() + " | Depart: "
+                                    + f.getDepartureTime());
                             }
                             break; // Exit the loop after searching for flights
                         case "2":
                             System.out.println("Enter customer username: ");
                             String customerUsername = input.nextLine().trim();
 
-                            User customer = system.findUserByUsername(customerUsername); // Get the customer by username
+                            Customer customer = (Customer) system.findUserByUsername(customerUsername); // Get the customer by username
                             if (customer == null || !(customer instanceof Customer)) {
                                 System.out.println("Customer not found or invalid user type.");
                                 break; // Exit the loop if customer is not found
                             }
-                            Customer customer2 = (Customer) customer; // Cast the user to Customer
 
                             System.out.print("Origin: ");
                             String origin2 = input.nextLine().trim();
@@ -271,25 +273,23 @@ public class Main {
                             }
                             for (int i = 0;i<flights2.size(); i++){
                                 Flight f = flights2.get(i);
-                                System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
-                                        i+1,
-                                        f.getFlightNumber(),
-                                        f.getAirline(),
-                                        f.getOrigin(),
-                                        f.getDestination(),
-                                        f.getDepartureTime()
-                                        );
+                                System.out.println((i + 1) + ") " 
+                                    + f.getFlightNumber() + " | "
+                                    + f.getAirline() + " to "
+                                    + f.getOrigin() + " | "
+                                    + f.getDestination() + " | Depart: "
+                                    + f.getDepartureTime());
                             }
                             System.out.print("Select flight (1-" + flights2.size() + "): ");
                             int select2 = Integer.parseInt(input.nextLine()) - 1;
                             Flight selectedFlight2 = flights2.get(select2); // Get the selected flight
-                            Passenger passenger = new Passenger(customer2.getUserID(), customer2.getUsername(), customer2.getPassportNumber()); // Create a passenger object
+                            Passenger passenger = new Passenger(customer.getUserID(), customer.getUsername(), customer.getPassportNumber()); // Create a passenger object
                             List<Passenger> passengers2 = Collections.singletonList(passenger); // Create a list of passengers with the customer as the only passenger
 
-                            Booking booking2 = system.createBooking(customer2, selectedFlight2, passengers2); // Create a booking
+                            Booking booking2 = system.createBooking(customer, selectedFlight2, passengers2); // Create a booking
                             System.out.println("Total price: " + booking2.calculateTotalPrice()); // Calculate the total price of the booking
 
-                            System.out.print("Enter payment method (1- CreditCard, 2- Bank transfer): ");
+                            System.out.print("Enter payment method (1- CreditCard, 2- Bank transfer): "); // Process payment.
                             String paymentMethod = input.nextLine().trim();
                             Interfaces.PaymentProcessor processor;
                             Payment payment;
