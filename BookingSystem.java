@@ -114,7 +114,7 @@ public User register(String username, String password, String email,String role,
             break;
         case "ADMIN":
         case "ADMINISTRATOR":
-            user = new Administrator(userId, username, password, email); // Create a new admin
+            user = new Administrator(userId, username, password, email,"Normal"); // Create a new admin
             break;
         default:
             user = new Customer(userId, username, password, email, passportNumber); // Create a new customer

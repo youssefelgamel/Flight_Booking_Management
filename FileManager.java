@@ -3,8 +3,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FileManager {
-    private static final String USERS_FILE      = "users.txt";
+public class FileManager {  // static and final data field that are no longer can be modified.
+    private static final String USERS_FILE      = "users.txt"; 
     private static final String FLIGHTS_FILE    = "flights.txt";
     private static final String PASSENGERS_FILE = "passengers.txt";
     private static final String BOOKINGS_FILE   = "bookings.txt";
@@ -14,16 +14,16 @@ public class FileManager {
     // --- Users ---
     //
     public static void saveUsers(List<User> users) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(USERS_FILE))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(USERS_FILE))) { // USERS_FILE  = "users.txt"
             for (User u : users) {
-                if (u instanceof Customer){
-                    Customer c = (Customer) u;
+                if (u instanceof Customer){ // 'instanceof keyword' check whether an object is an instance of a specific class or interface.
+                    Customer c = (Customer) u; // casting to tell the compiler to treat the object referred to by u as a Cutomer.
                     bw.write(String.join(",",
                             c.getUserID(),
                             c.getUsername(),
                             c.getPassword(),
                             c.getEmail(),
-                            c.getPassportNumber(),
+                            c.getPassportNumber(), // Cutomer is the passenger so, both have a passport number.
                             "CUSTOMER"));
                 }
                 else if (u instanceof Agent){
@@ -33,6 +33,7 @@ public class FileManager {
                             a.getUsername(),
                             a.getPassword(),
                             a.getEmail(),
+                            a.getDepartment(),
                             "AGENT"));
                 }
                 else if (u instanceof Administrator){
@@ -45,26 +46,37 @@ public class FileManager {
                             "ADMININSTRATOR"));
                 }
                 else {
-                    System.err.println("Unknown user type, skipping: " + u);
+                    System.err.println("Unknown user type, skipping: " + u); // print any other user type but in our case there are only 3.
                     continue;
                 }
-                bw.newLine();
+                bw.newLine(); // after all the operations a new line is needed to separate every line and to avoid confusion.
             }
         }
     }
-
     public static List<User> loadUsers() throws IOException {
-        List<User> users = new ArrayList<>();
-        File f = new File(USERS_FILE);
-        if (!f.exists()) return users;  // return empty list if file does not exist
+        List<User> users = new ArrayList<>(); // define an ArrayList that it's element of type User
+        File f = new File(USERS_FILE); // USERS_FILE  = "users.txt"
+        if (!f.exists()) return users;  // return empty list if file does not exist.
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) { // reads the file line by line
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) { // reads the file line by line.
             String line;
-            while ((line = br.readLine()) != null) {
-                if (line.isBlank() || line.startsWith("//")) continue;
-                String[] p = line.split(",");
+            while ((line = br.readLine()) != null) { // check if a single line is not blank.
+                if (line.isBlank() || line.startsWith("//" /* check if it's a comment line */ )) continue; // There must be a condition excited to get the method isBlank(), startWith of the String data type.
+                String[] p = line.split(","); // p for parts, regex is a sequece of characters that defined a search pattern.
+                /*
+                 *  The previos line of code takes a line as a one String and splits it with comma separated parts.
+                 *  Example:
+                 *  String line = "Alice,alice123,passw0rd,alice@example.com";
+                    split on commas
+                    String[] p = line.split(",");
+                    now:
+                    p[0] == "Alice"
+                    p[1] == "alice123"
+                    p[2] == "passw0rd"
+                    p[3] == "alice@example.com"
+                 */
 
-                String role = p[p.length - 1].trim().toUpperCase();
+                String role = p[p.length - 1].trim().toUpperCase(); // Define a role variable and place it at the end with no spaces and in uppercase.
                 switch (role) {
 
                     case "CUSTOMER":
@@ -76,22 +88,24 @@ public class FileManager {
                             String custPass = p[2].trim();
                             String custEmail= p[3].trim();
                             String passport = p[4].trim();
-                            users.add(new Customer(custId, custUser, custPass, custEmail, passport));
+                            users.add(new Customer(custId, custUser, custPass, custEmail, passport)); // constructor takes 5 attributes.
                         break;
 
                     case "AGENT":
-                        if (p.length != 5) {
-                            throw new IllegalArgumentException("Expected 5 fields " + line);
+                        if (p.length != 6) {
+                            throw new IllegalArgumentException("Expected 6 fields " + line);
                         }
-                            users.add(new Agent(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(),"Defualt Agency"));
-                            break;
+                            String agentDepartment = p[4].trim();
+                            users.add(new Agent(p[0],p[1],p[2],p[3],agentDepartment));
+                        break;
 
                     case "ADMININSTRATOR":
                     case "ADMIN":
-                        if (p.length != 5) {
-                            throw new IllegalArgumentException("Expected 5 fields " + line);
+                        if (p.length != 6) {
+                            throw new IllegalArgumentException("Expected 6 fields " + line);
                         }
-                            users.add(new Administrator(p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim()));
+                            String AdminSecurityLevel = p[4].trim();
+                            users.add(new Administrator(p[0],p[1],p[2],p[3],AdminSecurityLevel));
                             break;
                     default:
                         System.out.println("Unknown user type, skipping: " + role);
@@ -107,12 +121,12 @@ public class FileManager {
     public static void saveFlights(List<Flight> flights) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FLIGHTS_FILE))) {
             for (Flight f : flights) {
-                String type = f instanceof DomesticFlight      ? "DOMESTIC"
+                String type = f instanceof DomesticFlight      ? "DOMESTIC"  // Shorter way to get the type of the flight.
                             : f instanceof InternationalFlight ? "INTERNATIONAL"
                             : "UNKNOWN";
                 String prices = f.classBasePrices.entrySet().stream() // stream the map entries
-                    .map(e -> e.getKey() + "=" + e.getValue())
-                    .collect(Collectors.joining(";"));
+                    .map(e -> e.getKey() + "=" + e.getValue()) // mapping the two types of flights with a base Price.
+                    .collect(Collectors.joining(";")); // key: Economy,First Class || value: the base Price.
                 bw.write(String.join(",",
                             type,
                             f.getFlightNumber(),
@@ -130,12 +144,12 @@ public class FileManager {
     public static List<Flight> loadFlights() throws IOException {
         List<Flight> flights = new ArrayList<>();
         File f = new File(FLIGHTS_FILE);
-        if (!f.exists()) return flights;
+        if (!f.exists()) return flights; // returns an empty list if no such file.
 
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.isBlank()) continue;
+                if (line.isBlank() || line.startsWith("//")) continue;
                 String[] p = line.split(",", 8);
                 if (p.length != 8) {
                     throw new IllegalArgumentException("Expected 8 fields " + line);
@@ -153,7 +167,7 @@ public class FileManager {
 
                 Flight flight;
                 if (type.equals("DOMESTIC")) {
-                    flight = new DomesticFlight(num,air,orig,dest,dep,arr,prices);
+                    flight = new DomesticFlight(num,air,orig,dest,dep,arr,prices); // the only difference between the two types is the price.
                 } else {
                     flight = new InternationalFlight(num,air,orig,dest,dep,arr,prices);
                 }
@@ -215,7 +229,7 @@ public class FileManager {
                     .map(Passenger::getPassengerID)
                     .collect(Collectors.joining("|"));
                 bw.write(String.join(",",
-                            b.getBookingReference(),
+                            b.getBookingReference(), // Booking reference, CustomerId, Flight Number, boolean is paymentConfirmed.
                             b.getCustomer().getUserID(),
                             b.getFlight().getFlightNumber(),
                             paxIds,
@@ -225,46 +239,84 @@ public class FileManager {
         }
     }
 
-    public static List<Booking> loadBookings(
-            List<User> users, List<Flight> flights, List<Passenger> pax) throws IOException {
-        // Build maps for quick lookup
-        Map<String,Customer> custMap = users.stream()
-            .filter(u->u instanceof Customer)
-            .map(u->(Customer)u)
-            .collect(Collectors.toMap(Customer::getUserID, c->c));
-        Map<String,Flight> flightMap = flights.stream()
-            .collect(Collectors.toMap(Flight::getFlightNumber, f->f));
-        Map<String,Passenger> paxMap = pax.stream()
-            .collect(Collectors.toMap(Passenger::getPassengerID, p->p));
+public static List<Booking> loadBookings (List<User>users, List<Flight>flights, List<Passenger>pax) throws IOException {
 
-        List<Booking> bookings = new ArrayList<>();
-        File f = new File(BOOKINGS_FILE);
-        if (!f.exists()) return bookings;
+    List<Booking> bookings = new ArrayList<>();
+    File file = new File(BOOKINGS_FILE);
+    if (!file.exists()) return bookings;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.isBlank()) continue;
-                String[] p = line.split(",", 5);
-                if (p.length != 5) {
-                    throw new IllegalArgumentException("Expected 5 fields " + line);
-                }
-                String ref    = p[0].trim();
-                Customer c    = custMap.get(p[1].trim());
-                Flight fl     = flightMap.get(p[2].trim());
-                List<Passenger> list = Arrays.stream(p[3].split("\\|"))
-                                            .map(id -> paxMap.get(id.trim()))
-                                            .collect(Collectors.toList());
-                boolean paid  = Boolean.parseBoolean(p[4].trim());
+    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (line.isBlank() || line.startsWith("//")) continue; 
 
-                Booking b = new Booking(ref, c, fl, list);
-                if (paid) b.confirmPayment();
-                bookings.add(b);
-                c.addBooking(b);
+            // Expect exactly 5 fields: ref, customerId, flightNum, paxIds, paid
+            String[] p = line.split(",", 5);
+            if (p.length != 5) {
+                throw new IllegalArgumentException("Expected 5 fields, got: " + line);
             }
+
+            String ref       = p[0].trim();
+            String custId    = p[1].trim();
+            String flightNum = p[2].trim();
+            String paxBlock  = p[3].trim();
+            boolean paid     = Boolean.parseBoolean(p[4].trim());
+
+            // Find the Customer by ID
+            Customer customer = null;
+            for (User u : users) {
+                if (u instanceof Customer && ((Customer) u).getUserID().equals(custId)) {
+                    customer = (Customer) u;
+                    break;
+                }
+            }
+            if (customer == null) {
+                throw new IllegalArgumentException("Unknown customer ID: " + custId);
+            }
+
+            // Find the Flight by flight number
+            Flight flight = null;
+            for (Flight f : flights) {
+                if (f.getFlightNumber().equals(flightNum)) {
+                    flight = f;
+                    break;
+                }
+            }
+            if (flight == null) {
+                throw new IllegalArgumentException("Unknown flight number: " + flightNum);
+            }
+
+            // Build the passenger list
+            List<Passenger> bookedPax = new ArrayList<>();
+            String[] paxIds = paxBlock.split("\\|");
+            for (String pid : paxIds) {
+                String passengerId = pid.trim();
+                boolean found = false;
+                for (Passenger passenger : pax) {
+                    if (passenger.getPassengerID().equals(passengerId)) {
+                        bookedPax.add(passenger);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    throw new IllegalArgumentException("Unknown passenger ID: " + passengerId);
+                }
+            }
+
+            // Construct and register the booking
+            Booking booking = new Booking(ref, customer, flight, bookedPax);
+            if (paid) {
+                booking.confirmPayment();
+            }
+            bookings.add(booking);
+            customer.addBooking(booking);
         }
-        return bookings;
     }
+
+    return bookings;
+}
+
 
     //
     // --- Payments ---
@@ -289,7 +341,7 @@ public class FileManager {
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.isBlank()) continue;
+                if (line.isBlank() || line.startsWith("//")) continue;
                 String[] p = line.split(",", 2);
                 if (p.length != 2) {
                     throw new IllegalArgumentException("Expected 2 fields " + line);

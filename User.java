@@ -86,8 +86,15 @@ class Agent extends User{
 //--------------------- Administrator ---------------------
 class Administrator extends User{
 
-    public Administrator(String userID, String username, String password, String email){
+    private String securityLevel;
+
+    public Administrator(String userID, String username, String password, String email, String securityLevel){
         super(userID,username,password,email);
+        this.securityLevel = securityLevel;
+    }
+
+    public String getSecurityLevel(){
+        return securityLevel;
     }
 
     @Override
