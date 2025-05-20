@@ -266,7 +266,8 @@ public static List<Booking> loadBookings (List<User>users, List<Flight>flights, 
             String custId    = p[1].trim();
             String flightNum = p[2].trim();
             String paxBlock  = p[3].trim();
-            boolean paid     = Boolean.parseBoolean(p[4].trim());
+            boolean paid     = Boolean.parseBoolean(p[4].trim()); // parses the String argument as a boolean
+            // If not null return true else return false.
 
             // Find the Customer by ID
             Customer customer = null;

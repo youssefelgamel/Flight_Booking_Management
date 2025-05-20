@@ -1,0 +1,3 @@
+0,Admin,1234lol,Admin@gmail.com,Normal,ADMININSTRATOR
+1,Agent,1234lol,Agent@gmail.com,Default Agency,AGENT
+2,cust1,1234lol,cust1@gmail.com,12345678,CUSTOMER

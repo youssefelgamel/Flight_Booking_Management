@@ -147,5 +147,4 @@ public User findUserByUsername(String username) {
     return null; // Return null if user not found
 }
 
-
 }

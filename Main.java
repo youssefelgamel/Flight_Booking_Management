@@ -1,4 +1,3 @@
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -221,7 +220,7 @@ public class Main {
                             + " | Arrival: " + f.getArrivalTime());
                         }
                     }
-                    break; // Exit the loop after viewing all flights
+                    break; 
                 case "3":
                     system.logout(); // Logout the user
                     System.out.println("Logged out. Thank you for using the system.");
