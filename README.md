@@ -1,0 +1,1 @@
+A basic flight booking system built using Java. This project was created as a learning exercise to practice Java concepts such as object-oriented programming, file handling, and simple user interaction through the console.
