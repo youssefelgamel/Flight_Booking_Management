@@ -1,343 +1,324 @@
-<<<<<<< HEAD
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
-=======
-//import java.util.Scanner; 
->>>>>>> 2c3d2bd81aa89e9d342103537ce23ae9a4d08794
 public class Main {
 
     public static void main(String[] args) {
-<<<<<<< HEAD
         Scanner input = new Scanner(System.in);
         BookingSystem system;
 
         try {
             system = new BookingSystem();
         } catch (Exception e) {
-            System.err.println("Faild to load data: " + e.getMessage());
+            System.err.println("Failed to load data: " + e.getMessage());
+            input.close();
             return;
         }
 
-            // Registration or login
-        while (true){
-            System.out.println("Welcome to The Flight Booking Management System");
+        // Authentication Phase
+        if (!authenticateUser(system, input)) {
+            System.out.println("Exiting system. Goodbye!");
+            input.close();
+            return;
+        }
+
+        // Main Program Loop
+        User currentUser = system.getCurrentUser();
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n--- Main Menu ---");
+
+            if (currentUser instanceof Customer) {
+                running = handleCustomerMenu((Customer) currentUser, system, input);
+            } else if (currentUser instanceof Administrator) {
+                running = handleAdminMenu(system, input);
+            } else if (currentUser instanceof Agent) {
+                running = handleAgentMenu(system, input);
+            } else {
+                System.err.println("Unknown user role.");
+                running = false;
+            }
+        }
+
+        input.close();
+    }
+
+    // --- Authentication ---
+
+    private static boolean authenticateUser(BookingSystem system, Scanner input) {
+        while (true) {
+            System.out.println("\nWelcome to The Flight Booking Management System");
             System.out.println("1. Login");
             System.out.println("2. Register");
             System.out.println("0. Exit");
-            String choice = input.nextLine().trim(); // trim to remove whitespace from both sides of a string
+            System.out.print("Select option: ");
+            String choice = input.nextLine().trim();
+
             try {
-                if (choice.equals("1")){
-                    System.out.print("Username: ");
-                    String username = input.nextLine().trim();
-                    System.out.print("Password: ");
-                    String password = input.nextLine().trim();
-                    if ( system.login(username, password)){
-                        System.out.println("Logged in as " + username + "\n");
-                        break; // Exit the loop if login is successful
-                    } else {
-                        System.err.println("Login failed for " + username);
-                    }
-                }else if (choice.equals("2")){
-                    System.out.print("Username: ");
-                    String newUser = input.nextLine().trim();
-                    System.out.print("Password: ");
-                    String newPassword = input.nextLine().trim();
-                    System.out.print("Email: ");
-                    String newEmail = input.nextLine().trim();
+                switch (choice) {
+                    case "1":
+                        System.out.print("Username: ");
+                        String username = input.nextLine().trim();
+                        System.out.print("Password: ");
+                        String password = input.nextLine().trim();
 
-                    // Role selection
-                    System.out.print("Select role (1- Customer, 2- Administrator, 3- Agent): ");
-                    String roleChoice = input.nextLine().trim();
-                    String role;
-                    switch (roleChoice) {
-                        case "1":
-                            role = "Customer";
-                            break;
-                        case "2":
-                            role = "Administrator";
-                            break;
-                        case "3":
-                            role = "Agent";
-                            break;
-                        default:
-                            System.err.println("Invalid role selection. Defaulting to Customer.");
-                            role = "Customer";
-                    }
-=======
-        // Scanner input=new Scanner(System.in);
-        UI ui = new UI();
-        Agent a1 = new Agent(1, "agent007", "TopSecret1", "James Bond",
-                "jbond@mi6.co.uk", "+44...", "Intelligence", 0.15);
+                        if (system.login(username, password)) {
+                            System.out.println("Logged in successfully as " + username);
+                            return true;
+                        } else {
+                            System.err.println("Login failed for " + username);
+                        }
+                        break;
 
-        Customer c1 = new Customer(2, "jane_doe", "Pass1234", "Jane Doe",
-                "jane@ex.com", "+20...", "123 Elm St",
-                "BKG123;BKG456", "window seat");
+                    case "2":
+                        System.out.print("Username: ");
+                        String newUser = input.nextLine().trim();
+                        System.out.print("Password: ");
+                        String newPassword = input.nextLine().trim();
+                        System.out.print("Email: ");
+                        String newEmail = input.nextLine().trim();
 
-        Administrator adm1 = new Administrator(3, "root", "Adm1n123", "Root User",
-                "root@sys.local", "+1...", "superuser");
+                        System.out.print("Select role (1- Customer, 2- Administrator, 3- Agent): ");
+                        String roleChoice = input.nextLine().trim();
+                        String role;
+                        switch (roleChoice) {
+                            case "1": role = "Customer"; break;
+                            case "2": role = "Administrator"; break;
+                            case "3": role = "Agent"; break;
+                            default:
+                                System.err.println("Invalid role choice. Defaulting to Customer.");
+                                role = "Customer";
+                                break;
+                        }
 
-        // Customer c2 = new Customer(2,"Dezllar","0123","Youssef
-        // Elgamel","youssefelgamel12@gmail.com","01271446218",
-        // "Alexandria","BKG12","2 seats"); // Error in password
->>>>>>> 2c3d2bd81aa89e9d342103537ce23ae9a4d08794
+                        system.register(newUser, newPassword, newEmail, role);
+                        System.out.println("Registration successful! You can now log in.");
+                        break;
 
-                    system.register(newUser, newPassword, newEmail,role);
-                    System.out.println("Registeration successful! you can now login \n");
-                }else if (choice.equals("0")){
-                    System.out.println("Exiting the system. Goodbye!");
-                    input.close();
-                    return; // Exit the program
-                }else {
-                    System.err.println("Invalid choice. Please try again.");
+                    case "0":
+                        return false;
+
+                    default:
+                        System.err.println("Invalid choice. Please try again.");
+                        break;
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());
             }
         }
-                
-        // Main menu loop
-        User currentUser = system.getCurrentUser(); // Get the current user after login
-        boolean running = true;
-        while (running){
-            System.out.println("Main Menu:");
-            if (currentUser instanceof Customer){ // check if the current user is a customer
+    }
 
-<<<<<<< HEAD
-            System.out.println("1) Search Flights");
-            System.out.println("2) View My Bookings");
-            System.out.println("3) Logout and Exit");
-            System.out.print("Select option: ");
-            String menu = input.nextLine().trim();
+    // --- Role-Based Menus ---
 
-            switch (menu){
-                case "1":
-                    System.out.print("Origin: ");
-                    String origin = input.nextLine().trim();
-                    System.out.print("Destination: ");
-                    String destination = input.nextLine().trim();
-                    System.out.print("Date (YYYY-MM-DD): ");
-                    String date = input.nextLine().trim();
-                    List<Flight> flights = system.searchFlights(origin, destination);
-                    if (flights.isEmpty()){
-                        System.out.println("No flights found from " + origin + " to " + destination + " on " + date);
-                        break; // Exit the loop if no flights are found
-                    }
-                    System.out.println("Available flights:");
-                    for (int i = 0; i < flights.size(); i++){
-                        Flight f = flights.get(i);
-                        System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
-                            i+1,
-                            f.getFlightNumber(),
-                            f.getAirline(),
-                            f.getOrigin(),
-                            f.getDestination());
-                    }
-                    System.out.print("Select flight (1-" + flights.size() + "): ");
-                    int select = Integer.parseInt(input.nextLine()) - 1;
-                    Flight selectedFlight = flights.get(select);
-                    System.out.print("Number of passengers: ");
-                    int numPax = Integer.parseInt(input.nextLine().trim());
-                    List<Passenger> passengers = new ArrayList<>();
-                    for (int i = 1; i <= numPax; i++){
-                        System.out.printf("Passenger %d ID: ", i);
-                        String passengerID = input.nextLine().trim();
-                        System.out.printf("Passenger %d name: ", i);
-                        String name = input.nextLine().trim();
-                        System.out.printf("Passenger %d passport number: ", i);
-                        String passport = input.nextLine().trim();
-                        System.out.printf("Passenger %d date of birth (YYYY-MM-DD): ", i);
-                        LocalDateTime dob = LocalDateTime.parse(input.nextLine().trim());
-                        passengers.add(new Passenger(passengerID, name, passport, dob));
-                    }
-                    Customer customer = (Customer) system.getCurrentUser();
-                    Booking booking = system.createBooking(customer, selectedFlight, passengers);
-                    System.out.println("\nBooking created! Reference: " + booking.getBookingReference());
-                    System.out.println("Total price: " + booking.calculateTotalPrice());
-                    break; // Exit the loop after creating a booking
-                case "2":
-                    // View Bookings
-                    Customer currentCustomer = (Customer) system.getCurrentUser();
-                    List<Booking> bookings = currentCustomer.getBookings();
-                    if (bookings.isEmpty()){
-                        System.out.println();
-                        System.out.println("No bookings found for " + currentCustomer.getUsername());
-                        System.out.println();
-                    } else {
-                        System.out.println("Your bookings:");
-                        for (Booking b : bookings){
-                            System.out.println(b.generateTicket());
-                        }
-                    }
-                    break; // Exit the loop after viewing bookings
-                case "3":
-                    system.logout(); // Logout the user
-                    System.out.println("Logged out. Thank you for using the system.");
-                    running = false; // Exit the main menu loop
-                    break;
-                default:
-                    System.err.println("Invalid choice. Please try again.");
-                    break; // Exit the loop if an invalid choice is made
+    private static boolean handleCustomerMenu(Customer customer, BookingSystem system, Scanner input) {
+        System.out.println("1) Search Flights");
+        System.out.println("2) View My Bookings");
+        System.out.println("3) Logout and Exit");
+        System.out.print("Select option: ");
+        String choice = input.nextLine().trim();
+
+        switch (choice) {
+            case "1":
+                searchAndBookFlight(customer, system, input);
+                return true;
+            case "2":
+                viewBookings(customer);
+                return true;
+            case "3":
+                system.logout();
+                System.out.println("Logged out. Thank you for using the system.");
+                return false;
+            default:
+                System.err.println("Invalid choice. Please try again.");
+                return true;
+        }
+    }
+
+    private static boolean handleAdminMenu(BookingSystem system, Scanner input) {
+        System.out.println("1) Add Flight");
+        System.out.println("2) View All Flights");
+        System.out.println("3) Logout and Exit");
+        System.out.print("Select option: ");
+        String choice = input.nextLine().trim();
+
+        switch (choice) {
+            case "1":
+                addNewFlight(system, input);
+                return true;
+            case "2":
+                viewAllFlights(system);
+                return true;
+            case "3":
+                system.logout();
+                System.out.println("Logged out. Thank you for using the system.");
+                return false;
+            default:
+                System.err.println("Invalid choice. Please try again.");
+                return true;
+        }
+    }
+
+    private static boolean handleAgentMenu(BookingSystem system, Scanner input) {
+        System.out.println("1) Search Flights");
+        System.out.println("2) Create Booking");
+        System.out.println("3) Logout and Exit");
+        System.out.print("Select option: ");
+        String choice = input.nextLine().trim();
+
+        switch (choice) {
+            case "1":
+                displayAvailableFlights(system, input);
+                return true;
+            case "2":
+                if (system.getCurrentUser() instanceof Customer) {
+                    searchAndBookFlight((Customer) system.getCurrentUser(), system, input);
+                } else {
+                    System.err.println("Agent-assisted customer booking requires active customer selection.");
+                }
+                return true;
+            case "3":
+                system.logout();
+                System.out.println("Logged out. Thank you for using the system.");
+                return false;
+            default:
+                System.err.println("Invalid choice. Please try again.");
+                return true;
+        }
+    }
+
+    // --- Helper Operations ---
+
+    private static void searchAndBookFlight(Customer customer, BookingSystem system, Scanner input) {
+        List<Flight> flights = displayAvailableFlights(system, input);
+        if (flights.isEmpty()) return;
+
+        try {
+            System.out.print("Select flight (1-" + flights.size() + "): ");
+            int index = Integer.parseInt(input.nextLine().trim()) - 1;
+            if (index < 0 || index >= flights.size()) {
+                System.err.println("Invalid flight selection.");
+                return;
             }
 
-        }else if (currentUser instanceof Administrator){
-            System.out.println("1) Add flight");
-            System.out.println("2) View all flights");
-            System.out.println("3) Logout and exit");
-            System.out.print("Select option: ");
-            String menu = input.nextLine().trim();
-            switch (menu){
-                case "1":
-                try{
-                    System.out.print("1- Domestic flight\n2- International flight\nSelect option: ");
-                    String flightType = input.nextLine().trim();
-                        System.out.print("Flight number: ");
-                        String flightNumber = input.nextLine().trim();
-                        System.out.print("Airline: ");
-                        String airline = input.nextLine().trim();
-                        System.out.print("Origin: ");
-                        String origin = input.nextLine().trim();
-                        System.out.print("Destination: ");
-                        String destination = input.nextLine().trim();
-                        System.out.print("Departure time (YYYY-MM-DDTHH:MM): ");
-                        LocalDateTime departureTime = LocalDateTime.parse(input.nextLine().trim());
-                        System.out.print("Arrival time (YYYY-MM-DDTHH:MM): ");
-                        LocalDateTime arrivalTime = LocalDateTime.parse(input.nextLine().trim());
-                        System.out.print("Price: ");
-                        Map<String, Double> priceMap = new HashMap<>();
-                        while (true) { 
-                            System.out.print("Enter fare class (or blank to finish):");
-                            String fareClass = input.nextLine().trim();
-                            if (fareClass.isEmpty()) {
-                                break; // Exit the loop if the user enters a blank fare class
-                            }
-                            System.out.print("Enter price for " + fareClass + ": ");
-                            double price = Double.parseDouble(input.nextLine().trim());
-                            priceMap.put(fareClass, price); // Add the fare class and price to the map
-                        }
+            Flight selectedFlight = flights.get(index);
+            System.out.print("Number of passengers: ");
+            int numPax = Integer.parseInt(input.nextLine().trim());
 
-                        Flight flight;
-                        if (flightType.equals("1")){
-                            flight = new DomesticFlight(flightNumber, airline, origin, destination, departureTime, arrivalTime, priceMap); // Create a domestic flight
-                        } else {
-                            flight = new InternationalFlight(flightNumber, airline, origin, destination, departureTime, arrivalTime, priceMap); // Create an international flight
-                        }
-                        system.addFlight(flight); // Add the flight to the system
-                        System.out.println("Flight added successfully!");
-                    }catch (Exception e) {
-                        System.err.println("Error adding flight: " + e.getMessage());
-                    }
-                    break; // Exit the loop after adding a flight
-        
-                case "2":
-                    // View all flights
-                    List<Flight> allFlights = system.getFlights(); // Get all flights from the system
-                    if (allFlights.isEmpty()){
-                        System.out.println("No flights available.");
-                    } else {
-                        System.out.println("All flights:");
-                        for (Flight f : allFlights){
-                            System.out.println(f.getFlightNumber() + " | " + f.getAirline() + " | " + f.getOrigin() + " to " + f.getDestination());
-                        }
-                    }
-                    break; // Exit the loop after viewing all flights
-                case "3":
-                    system.logout(); // Logout the user
-                    System.out.println("Logged out. Thank you for using the system.");
-                    running = false; // Exit the main menu loop
-                    break;
-                default:
-                    System.err.println("Invalid choice. Please try again.");
-                    break;} // Exit the loop if an invalid choice is made
-                }else{ // Agent
-                    System.out.println("1) Search Flights");
-                    System.out.println("2) Create Booking");
-                    System.out.println("3) Logout");
-                    System.out.print("Select option: ");
-                    String menu = input.nextLine().trim();
-                    switch (menu){
-                        case "1":
-                            System.out.print("Origin: ");
-                            String origin = input.nextLine().trim();
-                            System.out.print("Destination: ");
-                            String destination = input.nextLine().trim();
-                            List<Flight> flights = system.searchFlights(origin, destination); // Search for flights
-                            if (flights.isEmpty()){
-                                System.out.println("No flights found from " + origin + " to " + destination);
-                                break; // Exit the loop if no flights are found
-                            }
-                            System.out.println("Available flights:");
-                            for (int i = 0; i < flights.size(); i++){
-                                Flight f = flights.get(i);
-                                System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
-                                        i+1,
-                                        f.getFlightNumber(),
-                                        f.getAirline(),
-                                        f.getOrigin(),
-                                        f.getDestination());
-                            }
-                            break; // Exit the loop after searching for flights
-                        case "2":
-                            System.out.print("Origin: ");
-                            String origin2 = input.nextLine().trim();
-                            System.out.print("Destination: "); 
-                            String destination2 = input.nextLine().trim();
-                            List<Flight> flights2 = system.searchFlights(origin2, destination2); // Search for flights
-                            if (flights2.isEmpty()){
-                                System.out.println("No flights found from " + origin2 + " to " + destination2);
-                                break; // Exit the loop if no flights are found
-                            }
-                            for (int i = 0;i<flights2.size(); i++){
-                                Flight f = flights2.get(i);
-                                System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
-                                        i+1,
-                                        f.getFlightNumber(),
-                                        f.getAirline(),
-                                        f.getOrigin(),
-                                        f.getDestination());
-                            }
-                            System.out.print("Select flight (1-" + flights2.size() + "): ");
-                            int select2 = Integer.parseInt(input.nextLine()) - 1;
-                            Flight selectedFlight2 = flights2.get(select2); // Get the selected flight
-                            System.out.print("Number of passengers: ");
-                            int numPax2 = Integer.parseInt(input.nextLine().trim());
-                            List<Passenger> passengers2 = new ArrayList<>();
-                            for (int i = 1; i <= numPax2; i++){
-                                System.out.printf("Passenger %d ID: ", i);
-                                String passengerID = input.nextLine().trim();
-                                System.out.printf("Passenger %d name: ", i);
-                                String name = input.nextLine().trim();
-                                System.out.printf("Passenger %d passport number: ", i);
-                                String passport = input.nextLine().trim();
-                                System.out.printf("Passenger %d date of birth (YYYY-MM-DD): ", i);
-                                LocalDateTime dob = LocalDateTime.parse(input.nextLine().trim());
-                                passengers2.add(new Passenger(passengerID, name, passport, dob)); // Add the passenger to the list
-                            }
-                            Customer customer2 = (Customer) system.getCurrentUser(); // Get the current user
-                            Booking booking2 = system.createBooking(customer2, selectedFlight2, passengers2); // Create a booking
-                            System.out.println("\nBooking created! Reference: " + booking2.getBookingReference());
-                            System.out.println("Total price: " + booking2.calculateTotalPrice()); // Calculate the total price of the booking
-                            break; // Exit the loop after creating a booking
-                        case "3":
-                            system.logout(); // Logout the user
-                            System.out.println("Logged out. Thank you for using the system.");
-                            running = false; // Exit the main menu loop
-                            break;
-                        default:
-                            System.err.println("Invalid choice. Please try again.");
-                    }
-                }
-                }
-        input.close(); // Close the scanner
-=======
-        /// 555555555555555555555555555555555555555555555
+            List<Passenger> passengers = new ArrayList<>();
+            for (int i = 1; i <= numPax; i++) {
+                System.out.printf("--- Passenger %d ---\n", i);
+                System.out.print("ID: ");
+                String passengerID = input.nextLine().trim();
+                System.out.print("Name: ");
+                String name = input.nextLine().trim();
+                System.out.print("Passport number: ");
+                String passport = input.nextLine().trim();
+                System.out.print("Date of Birth (YYYY-MM-DD): ");
+                LocalDateTime dob = LocalDate.parse(input.nextLine().trim()).atStartOfDay();
 
-        /* Booooooombaaaaaaaaaaaaaaaaaa */
+                passengers.add(new Passenger(passengerID, name, passport, dob));
+            }
 
-        /* Booooooombaaaaaaaaaaaaaaaaaa */
+            Booking booking = system.createBooking(customer, selectedFlight, passengers);
+            System.out.println("\nBooking created! Reference: " + booking.getBookingReference());
+            System.out.println("Total price: " + booking.calculateTotalPrice());
 
-        /* Booooooombaaaaaaaaaaaaaaaaaa */
->>>>>>> 2c3d2bd81aa89e9d342103537ce23ae9a4d08794
+        } catch (Exception e) {
+            System.err.println("Error booking flight: " + e.getMessage());
+        }
+    }
+
+    private static List<Flight> displayAvailableFlights(BookingSystem system, Scanner input) {
+        System.out.print("Origin: ");
+        String origin = input.nextLine().trim();
+        System.out.print("Destination: ");
+        String destination = input.nextLine().trim();
+
+        List<Flight> flights = system.searchFlights(origin, destination);
+        if (flights.isEmpty()) {
+            System.out.println("No flights found from " + origin + " to " + destination);
+            return flights;
+        }
+
+        System.out.println("\nAvailable flights:");
+        for (int i = 0; i < flights.size(); i++) {
+            Flight f = flights.get(i);
+            System.out.printf("%d) %s | %s | %s to %s | Depart: %s\n",
+                    i + 1, f.getFlightNumber(), f.getAirline(), f.getOrigin(), f.getDestination(), f.getDepartureTime());
+        }
+        return flights;
+    }
+
+    private static void viewBookings(Customer customer) {
+        List<Booking> bookings = customer.getBookings();
+        if (bookings.isEmpty()) {
+            System.out.println("\nNo bookings found for " + customer.getUsername());
+        } else {
+            System.out.println("\nYour bookings:");
+            for (Booking b : bookings) {
+                System.out.println(b.generateTicket());
+            }
+        }
+    }
+
+    private static void addNewFlight(BookingSystem system, Scanner input) {
+        try {
+            System.out.print("1- Domestic flight\n2- International flight\nSelect option: ");
+            String flightType = input.nextLine().trim();
+
+            System.out.print("Flight number: ");
+            String flightNumber = input.nextLine().trim();
+            System.out.print("Airline: ");
+            String airline = input.nextLine().trim();
+            System.out.print("Origin: ");
+            String origin = input.nextLine().trim();
+            System.out.print("Destination: ");
+            String destination = input.nextLine().trim();
+            System.out.print("Departure time (YYYY-MM-DDTHH:MM): ");
+            LocalDateTime departureTime = LocalDateTime.parse(input.nextLine().trim());
+            System.out.print("Arrival time (YYYY-MM-DDTHH:MM): ");
+            LocalDateTime arrivalTime = LocalDateTime.parse(input.nextLine().trim());
+
+            Map<String, Double> priceMap = new HashMap<>();
+            while (true) {
+                System.out.print("Enter fare class (or blank to finish): ");
+                String fareClass = input.nextLine().trim();
+                if (fareClass.isEmpty()) break;
+
+                System.out.print("Enter price for " + fareClass + ": ");
+                double price = Double.parseDouble(input.nextLine().trim());
+                priceMap.put(fareClass, price);
+            }
+
+            Flight flight;
+            if ("1".equals(flightType)) {
+                flight = new DomesticFlight(flightNumber, airline, origin, destination, departureTime, arrivalTime, priceMap);
+            } else {
+                flight = new InternationalFlight(flightNumber, airline, origin, destination, departureTime, arrivalTime, priceMap);
+            }
+
+            system.addFlight(flight);
+            System.out.println("Flight added successfully!");
+        } catch (Exception e) {
+            System.err.println("Error adding flight: " + e.getMessage());
+        }
+    }
+
+    private static void viewAllFlights(BookingSystem system) {
+        List<Flight> allFlights = system.getFlights();
+        if (allFlights.isEmpty()) {
+            System.out.println("No flights available.");
+        } else {
+            System.out.println("\nAll flights:");
+            for (Flight f : allFlights) {
+                System.out.println(f.getFlightNumber() + " | " + f.getAirline() + " | " + f.getOrigin() + " to " + f.getDestination());
+            }
+        }
     }
 }
